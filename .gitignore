@@ -1,2 +1,5 @@
 *.code-workspace
 *.lnk
+
+# /で.gitignore基準
+# directory/でフォルダとその配下を無視
