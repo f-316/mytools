@@ -12,13 +12,11 @@
 # ---
 
 # global-dir
+Debug/
+Release/
+*.vs/
 
 # global-file
+*.code-workspace
 *.lnk
-**/#*
-
-# local
-/*.code-workspace
-
-# /で.gitignore基準
-# directory/でフォルダとその配下を無視
+*.vcxproj.user
