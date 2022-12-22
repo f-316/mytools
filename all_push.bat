@@ -9,5 +9,3 @@ git commit -m "commit by script"
 
 rem プッシュ
 git push origin main
-
-rem hoge
