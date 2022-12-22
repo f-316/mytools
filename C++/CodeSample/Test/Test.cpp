@@ -1,11 +1,8 @@
 ﻿// Test.cpp : このファイルには 'main' 関数が含まれています。プログラム実行の開始と終了がそこで行われます。
 //
 
-#define WIN32_LEAN_AND_MEAN
-
-//#include <iostream>
-#include <stdio.h>
 #include "MathEx.h"
+#include "NetToos.h"
 
 int main()
 {
@@ -17,6 +14,10 @@ int main()
     num = CMathEx::Align(1, -1);
     printf("%d\n", num);
     
+    CTcpClient ca;
+    ca.Test();
+    return 0;
+     
     for (int i = 0; i < 34; i++)
     {
         num = CMathEx::Align(i, 16);

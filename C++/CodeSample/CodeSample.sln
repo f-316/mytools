@@ -8,8 +8,14 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PipeServer", "PipeServer\PipeServer.vcxproj", "{2E0FFA60-C73A-47AF-9542-5B7BAACB126C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test", "Test\Test.vcxproj", "{6632CB74-FF52-42CC-B258-563C8A7B919F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7639BB91-C217-4639-8697-15224DC99DA7} = {7639BB91-C217-4639-8697-15224DC99DA7}
+		{BDEF48F8-224B-4226-890F-8048D224FECA} = {BDEF48F8-224B-4226-890F-8048D224FECA}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MathEx", "..\Lib\MathEx\MathEx.vcxproj", "{7639BB91-C217-4639-8697-15224DC99DA7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NetTools", "..\Lib\NetTools\NetTools.vcxproj", "{BDEF48F8-224B-4226-890F-8048D224FECA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +57,14 @@ Global
 		{7639BB91-C217-4639-8697-15224DC99DA7}.Release|x64.Build.0 = Release|x64
 		{7639BB91-C217-4639-8697-15224DC99DA7}.Release|x86.ActiveCfg = Release|Win32
 		{7639BB91-C217-4639-8697-15224DC99DA7}.Release|x86.Build.0 = Release|Win32
+		{BDEF48F8-224B-4226-890F-8048D224FECA}.Debug|x64.ActiveCfg = Debug|x64
+		{BDEF48F8-224B-4226-890F-8048D224FECA}.Debug|x64.Build.0 = Debug|x64
+		{BDEF48F8-224B-4226-890F-8048D224FECA}.Debug|x86.ActiveCfg = Debug|Win32
+		{BDEF48F8-224B-4226-890F-8048D224FECA}.Debug|x86.Build.0 = Debug|Win32
+		{BDEF48F8-224B-4226-890F-8048D224FECA}.Release|x64.ActiveCfg = Release|x64
+		{BDEF48F8-224B-4226-890F-8048D224FECA}.Release|x64.Build.0 = Release|x64
+		{BDEF48F8-224B-4226-890F-8048D224FECA}.Release|x86.ActiveCfg = Release|Win32
+		{BDEF48F8-224B-4226-890F-8048D224FECA}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
