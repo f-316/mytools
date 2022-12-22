@@ -48,7 +48,7 @@ git log
 origin(リモートリポジトリ)に「master」ブランチの情報をプッシュ  
 
 ```bat
-git push origin master  
+git push origin main
 rem ↓でも行けた  
 git push origin
 ```
