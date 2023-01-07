@@ -2,10 +2,19 @@
 //
 
 #include "MathEx.h"
-#include "NetToos.h"
+#include "NetTools.h"
+#include "CsvTest.h"
+#include "BasicTools.h"
 
 int main()
 {
+    CStopwatch s;
+    s.Sample();
+
+    return 0;
+    CsvTest test;
+    test.Test();
+    return 0;
     int num = 0;
 
     num = CMathEx::Align(1, 1);
