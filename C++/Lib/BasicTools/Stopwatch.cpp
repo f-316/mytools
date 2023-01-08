@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Stopwatch.h"
 
+using namespace std::chrono;
+
 CStopwatch::CStopwatch()
     : isStarted(false)
 {

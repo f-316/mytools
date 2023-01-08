@@ -151,11 +151,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\BasicTools.h" />
     <ClInclude Include="AppLog.h" />
     <ClInclude Include="AsyncTask.h" />
     <ClInclude Include="BasicTool.h" />
     <ClInclude Include="Event.h" />
-    <ClInclude Include="FileOpr.h" />
+    <ClInclude Include="FileTool.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Stopwatch.h" />
@@ -165,7 +166,7 @@
     <ClCompile Include="AsyncTask.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Event.cpp" />
-    <ClCompile Include="FileOpr.cpp" />
+    <ClCompile Include="FileTool.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

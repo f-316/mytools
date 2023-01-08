@@ -4,7 +4,6 @@
 #include <thread>
 #include <chrono>
 
-using namespace std::chrono;
 
 class __declspec(dllexport) CStopwatch
 {
@@ -17,7 +16,7 @@ public:
     unsigned long ElapsedTimeInMs(void);
 
 protected:
-    system_clock::time_point m_startCounter;
+    std::chrono::system_clock::time_point m_startCounter;
     bool isStarted;
 
 };

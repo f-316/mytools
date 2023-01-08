@@ -1,0 +1,37 @@
+#pragma once
+#ifndef __FileOpr__
+#define __FileOpr__
+
+#include <iostream>
+#include <fstream>
+#include <string>
+
+class __declspec(dllexport) CFileTool
+{
+public:
+	CFileTool(std::string filePath);
+	CFileTool(void);
+	virtual ~CFileTool(void);
+	void Sample(void);
+	DWORD GetSize(void);
+	BOOL Read(void);
+	DWORD GetLineCount(void);
+	BOOL ParseLineText(void);
+
+protected:
+	std::string m_filePath;
+	HANDLE m_hFile;
+	DWORD m_fileSize;
+	BYTE* m_rawData;
+	DWORD m_rawDataSize;
+	BYTE* m_lineParsedData;
+	DWORD m_lineParsedDataSize;
+	BYTE** m_pLines;
+	DWORD m_lineCount;
+
+	BOOL Open(void);
+	void Close(void);
+	BOOL IsOpen(void) { return m_hFile != INVALID_HANDLE_VALUE; }
+};
+
+#endif // !__FileOpr__
