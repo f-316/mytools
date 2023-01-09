@@ -29,6 +29,10 @@ public:
 
 	BOOL Write(BYTE* pBuffer, DWORD bufferSize);
 
+	// StringTools
+	void UTF8toUTF16(const BYTE* pStr8, DWORD byteLen, char16_t* pStr16, DWORD pStr16BufSize, DWORD& str16Len);
+	void UTF16toUTF8(const char16_t* pStr16, DWORD str16Len, BYTE* pStr8, DWORD pStr8BufSize, DWORD& byteLen);
+
 protected:
 	std::string m_filePath;
 	HANDLE m_hFile;
