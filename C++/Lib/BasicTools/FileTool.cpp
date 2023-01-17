@@ -126,7 +126,7 @@ void CFileTool::SampleWrite(void)
 		// UTF-8,テキストファイルに出力時はBOMが必要,不要なものもある。
 		SetFilePath("#sample_utf-8_with-bom.txt");
 		Open(TRUE, TRUE);
-		const char* pStr = /*BOM*/"\xEF\xBB\xBF" /*あ*/"\xe3\x81\x82" /*い*/"\xe3\x81\x84" "\r\n";
+		const char* pStr = /*BOM*/"\xEF" "\xBB" "\xBF" /*あ*/"\xE3\x81\x82" /*い*/"\xE3\x81\x84" "\r\n";
 		Write((BYTE*)pStr, strlen(pStr));
 	}
 	break;

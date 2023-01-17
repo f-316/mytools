@@ -17,14 +17,16 @@ CTrainingApp::~CTrainingApp()
 
 BOOL CTrainingApp::Start(void)
 {
+    // ToDo: ファイル入出力
+    CFileTool settingFile;
+    settingFile.ParseLineText();
+
     // ToDo: マルチスレッド
     // ToDo: Inputスレッド
     m_inputTask.Start(InputThread, this);
     m_procTask.Start(ProcThread, this);
 
     // ToDo: TCP通信、Client、Server
-
-    // ToDo: ファイル入出力
 
     return TRUE;
 }

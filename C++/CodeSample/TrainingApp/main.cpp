@@ -3,12 +3,6 @@
 
 int main()
 {
-    //CFileTool file;
-    CFileTool file;
-    file.Sample();
-
-    return 1;
-
     CTrainingApp app;
     if (!app.Start())
     {
