@@ -17,19 +17,23 @@ Private m_jsonData As Object
 Private m_textBuf As String
 
 Private Sub Class_Initialize()
-  Call Reset
+    Call Reset
 End Sub
 
 Private Sub Class_Terminate()
+    Call Reset
 End Sub
 
 ' メンバをリセットします。
 ' @param[in] none
 ' @return none
 Private Sub Reset()
-  m_newLine = vbCrLf
-  m_charSet = "UTF-8"
-  m_isParsed = False
+    m_charSet = "UTF-8"
+    m_newLine = vbCrLf
+    m_isParsed = False
+    m_lineCount = 0
+    Set m_jsonData = Nothing
+    m_textBuf = ""
 End Sub
 
 ' 解析済みか確認します。
@@ -159,31 +163,20 @@ End Function
 ' @param[in] none
 ' @return 成功したらTRUE
 ' @note
-' すべて文字列としてDictionaryに保持
-' 1行に付き1つのkey: valueのみ対応
-' オブジェクト構造のみ対応
-' 配列解析未対応
+' 1行に付き1つのkey: valueのみ対応 ×{"a": 1, "b": 2} 1行に複数は読めない
+' すべて文字列としてDictionaryに保持 ×{"a": true, "b": 2} bool, intで格納しない
+' オブジェクト構造のみ対応 ×{"a": [1, 2, 3]} 配列は読めない
 Public Function Parse() As Boolean
 
     Parse = False
 
-    ' json形式データ初期化
-    Set m_jsonData = Nothing
-
     ' 行データとしてセット
     Dim strLines As Variant
     strLines = Split(m_textBuf, m_newLine)
+    m_textBuf = ""
     
     Dim curLine As Long: curLine = 0
     Dim nestCnt As Long: nestCnt = 0
-    
-    ' データ部取得
-    '{
-        '"key1": {
-        '},
-        '"key2": {
-        '}
-    '}
     
     ' 解析したObjectをセット
     Dim topObjName As String: topObjName = "root"
@@ -192,12 +185,6 @@ Public Function Parse() As Boolean
         MsgBox ("Parse failed.")
         Exit Function
     End If
-
-    ' デバッグ確認
-'    nestCnt = 0
-'    Dim str As String
-'    Call GetPrintableStr(m_jsonData, nestCnt, str)
-'    Debug.Print str
     
     Parse = True
 
@@ -302,6 +289,12 @@ Private Function ParseObject(ByRef strLines As Variant, ByRef curLine As Long, B
             
             ' 値がオブジェクト以外の場合
             Else
+                ' 値を補正
+                valStr = IIf(Right(valStr, 1) <> ",", valStr, Left(valStr, Len(valStr) - 1))
+                If (Left(valStr, 1) = """" And Right(valStr, 1) = """") Then
+                    valStr = Mid(valStr, 2, Len(valStr) - 2)
+                End If
+                
                 ' 親にkey,valueをセット
                 parentObj(keyName) = valStr
                 
@@ -330,7 +323,7 @@ Private Sub GetPrintableStr(ByRef dict As Scripting.Dictionary, ByRef nestCnt As
     Dim index As Long
     For index = 0 To UBound(dict.Keys())
         ' オブジェクト
-        If LCase(TypeName(dict(dict.Keys()(index)))) = "dictionary" Then
+        If LCase(typeName(dict(dict.Keys()(index)))) = "dictionary" Then
             
             printableStr = printableStr & IIf(index <> 0, "," & vbCrLf, "") & String(nestCnt, "  ") & """" & dict.Keys()(index) & """: {" & vbCrLf
             
@@ -340,10 +333,10 @@ Private Sub GetPrintableStr(ByRef dict As Scripting.Dictionary, ByRef nestCnt As
             
             printableStr = printableStr & vbCrLf & String(nestCnt, tabStr) & "}"
         
-        ElseIf LCase(TypeName(dict(dict.Keys()(index)))) = "variant()" Then
+        ElseIf LCase(typeName(dict(dict.Keys()(index)))) = "variant()" Then
         ' それ以外
         Else
-            printableStr = printableStr & IIf(index <> 0, "," & vbCrLf, "") & String(nestCnt, tabStr) & """" & dict.Keys()(index) & """: " & dict(dict.Keys()(index))
+            printableStr = printableStr & IIf(index <> 0, "," & vbCrLf, "") & String(nestCnt, tabStr) & """" & dict.Keys()(index) & """: """ & dict(dict.Keys()(index)) & """"
         End If
     Next index
 

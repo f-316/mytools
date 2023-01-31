@@ -37,13 +37,6 @@ Private Sub Reset()
   m_itemCount = 0
 End Sub
 
-' 解析済みか確認します。
-' @param[in] none
-' @return 解析済みであればTrue,それ以外はFalse
-Public Function IsParsed() As Boolean
-    IsParsed = m_isParsed
-End Function
-
 ' 文字セットを設定します。
 ' @param[in] 文字セット
 ' @return none
@@ -54,6 +47,10 @@ Public Sub SetCharSet(ByVal charSet As String)
     Case "utf8", "utf-8", "utf_8"
         m_charSet = "UTF-8"
         m_newLine = vbLf
+    ' UTF-16
+    Case "utf16", "utf-16", "utf_16"
+        m_charSet = "UTF-16"
+        m_newLine = vbCrLf
     ' Shift-JIS
     Case "sjis", "shiftjis", "shift-jis", "shift_jis"
         m_charSet = "Shift-JIS"
@@ -96,6 +93,39 @@ Public Function Load(ByVal filePath) As Boolean
     
 End Function
 
+' ファイルに書き出します。
+' @param[in] Dictionaryデータ,1階層目をSection,2階層目をkey=valueとして扱います。
+' @param[in] 出力先ファイルパス
+' @return 成功したらTrue,それ以外False
+Public Function WriteFile(ByRef iniData As Object, ByRef filePath As String) As Boolean
+    
+    WriteFile = False
+    
+    Dim writeStr As String
+    writeStr = MakeIniText(iniData)
+    
+    ' 0:改行無し, 1:改行あり
+    Dim writeMode As Long
+    writeMode = 0
+    
+    ' 1:ファイルが存在する場合実行エラー, 2:上書き
+    Dim saveMode As Long
+    saveMode = 2
+    
+    ' ファイルを開く
+    With CreateObject("ADODB.Stream")
+        .charSet = m_charSet
+        .Open
+        .WriteText writeStr, writeMode
+        .SaveToFile filePath, saveMode
+       .Close
+    End With
+    
+    ' return
+    WriteFile = True
+
+End Function
+
 ' iniデータ内のSectionを配列で取得します。
 ' @param[in] none
 ' @return Section名配列
@@ -104,6 +134,18 @@ Public Function GetSections() As Variant
     
     ' セクションデータ取得
     GetSections = m_iniData.Keys
+    
+End Function
+
+' iniデータ内の指定したSectionのkeyを配列で取得します。
+' @param[in] none
+' @return key名配列
+Public Function GetKeys(ByVal sectionName As String) As Variant
+    If Not m_isParsed Then Exit Function
+    
+    ' keyデータ取得
+    If Not HasSection(sectionName) Then Exit Function
+    GetKeys = m_iniData(sectionName).Keys
     
 End Function
 
@@ -293,5 +335,33 @@ Private Function StrCount(ByVal srcStr As String, ByVal tarStr As String) As Lon
         End If
     Loop
     StrCount = cnt
+
+End Function
+
+' iniデータ(Dictionaryオブジェクト)からテキストを生成します。
+' @param[in] Dictionaryデータ,1階層目をSection,2階層目をkey=valueとして扱います。
+' @return 生成したテキストデータ
+Private Function MakeIniText(ByRef iniData As Scripting.Dictionary) As String
+    
+    MakeIniText = ""
+    
+    Dim iniText As String
+
+    Dim section_ As Variant
+    For Each section_ In iniData.Keys()
+        
+        ' セクション名
+        iniText = iniText & "[" & section_ & "]" & m_newLine
+        
+        Dim key_ As Variant
+        For Each key_ In iniData(section_).Keys()
+            ' key,value
+            iniText = iniText & key_ & "=" & iniData(section_)(key_) & m_newLine
+        Next key_
+    
+    Next section_
+
+    ' return
+    MakeIniText = iniText
 
 End Function
