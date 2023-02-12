@@ -5,33 +5,14 @@
 #include "NetTools.h"
 #include "CsvTest.h"
 #include "BasicTools.h"
+#include "Grammar.h"
 
 int main()
 {
-    CStopwatch s;
-    s.Sample();
+    Grammar grammar;
+    grammar.Sample();
 
-    return 0;
-    CsvTest test;
-    test.Test();
-    return 0;
-    int num = 0;
-
-    num = CMathEx::Align(1, 1);
-    printf("%d\n", num);
-    
-    num = CMathEx::Align(1, -1);
-    printf("%d\n", num);
-    
-    CTcpClient ca;
-    ca.Test();
-    return 0;
-     
-    for (int i = 0; i < 34; i++)
-    {
-        num = CMathEx::Align(i, 16);
-        printf("[%d]%d\n", i, num);
-    }
+    return 1;
 }
 
 // プログラムの実行: Ctrl + F5 または [デバッグ] > [デバッグなしで開始] メニュー

@@ -155,6 +155,7 @@
     <ClInclude Include="AppLog.h" />
     <ClInclude Include="AsyncTask.h" />
     <ClInclude Include="BasicTool.h" />
+    <ClInclude Include="CBTool.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="FileTool.h" />
     <ClInclude Include="framework.h" />
@@ -164,6 +165,7 @@
   <ItemGroup>
     <ClCompile Include="AppLog.cpp" />
     <ClCompile Include="AsyncTask.cpp" />
+    <ClCompile Include="CBTool.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="FileTool.cpp" />

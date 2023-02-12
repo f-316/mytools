@@ -200,10 +200,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CsvTest.cpp" />
+    <ClCompile Include="Grammar.cpp" />
     <ClCompile Include="Test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CsvTest.h" />
+    <ClInclude Include="Grammar.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
