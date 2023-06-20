@@ -393,6 +393,9 @@ DWORD CFileTool::GetLineCount(void)
 	return lineCount;
 }
 
+/**
+* 
+*/
 BOOL CFileTool::ParseLineText(void)
 {
 	if (m_rawData == NULL || m_rawDataSize == 0)

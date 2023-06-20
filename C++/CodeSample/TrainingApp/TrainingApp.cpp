@@ -18,8 +18,13 @@ CTrainingApp::~CTrainingApp()
 BOOL CTrainingApp::Start(void)
 {
     // ToDo: ファイル入出力
-    CFileTool settingFile;
-    settingFile.ParseLineText();
+    std::string filePath = "C:\\tmp\\test.txt";
+    CFileTool settingFile(filePath);
+    if (!settingFile.ParseLineText())
+    {
+        CAppLog::Trace(FUNCTRACEARGS, "ParseLineText failed.");
+        return FALSE;
+    }
 
     // ToDo: マルチスレッド
     // ToDo: Inputスレッド

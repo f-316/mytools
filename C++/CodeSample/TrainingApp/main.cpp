@@ -3,6 +3,8 @@
 
 int main()
 {
-
+    CTrainingApp app;
+    app.Start();
+    app.WaitEnd();
     return 1;
 }

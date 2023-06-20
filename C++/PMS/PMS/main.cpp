@@ -1,28 +1,18 @@
-﻿// Test.cpp : このファイルには 'main' 関数が含まれています。プログラム実行の開始と終了がそこで行われます。
+﻿// PMS.cpp : このファイルには 'main' 関数が含まれています。プログラム実行の開始と終了がそこで行われます。
 //
 
-#include "MathEx.h"
-#include "NetTools.h"
-#include "CsvTest.h"
-#include "BasicTools.h"
-#include "Grammar.h"
+#include "main.h"
 
 int main()
 {
-    CTcpClient tcpClient;
-    tcpClient.Test();
+    CTcpServer tcpSvr;
+    tcpSvr.Test();
 
-    //CTcpServer tcpServer;
-    //tcpServer.Test();
-
-    return 1;
+    //MainApp app;
+    //app.Start();
+    //app.WaitEnd();
 }
 
-void TestGrammar()
-{
-    Grammar grammar;
-    grammar.Sample();
-}
 // プログラムの実行: Ctrl + F5 または [デバッグ] > [デバッグなしで開始] メニュー
 // プログラムのデバッグ: F5 または [デバッグ] > [デバッグの開始] メニュー
 

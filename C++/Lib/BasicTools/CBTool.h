@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include <string>
 #include <vector>
+#include <shellapi.h>
 
 class __declspec(dllexport) FileNamesToCB
 {

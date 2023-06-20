@@ -1,0 +1,28 @@
+# - チートシート
+# 特定のファイルを無視
+#   /directory_name/file_name.log
+# 特定のディレクトリを無視
+#   /directory_name/
+# /で.gitignore基準
+#   directory/でフォルダとその配下を無視
+# この名前と一致している、.gitignore以下の全サブディレクトリ下にあるファイル・ディレクトリを無視
+#   file_name
+# すべての.dbファイルを無視
+#   *.db
+# ---
+
+# global-dir
+Debug/
+Release/
+.vs/
+
+# global-file
+*.lnk
+*.vcxproj.user
+**/#*
+
+# local
+/*.code-workspace
+
+# /で.gitignore基準
+# directory/でフォルダとその配下を無視
