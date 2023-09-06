@@ -19,7 +19,8 @@
 int main()
 {
     WinEventTool tool;
-    tool.Run();
+    //tool.Run();
+    tool.WaitEventMode();
 }
 
 int _main()
