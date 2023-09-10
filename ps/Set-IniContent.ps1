@@ -40,6 +40,7 @@ $outputContent = @()
 $lineCnt = 0
 $sectionEnd = 0
 $foundSection = $false
+$keySet = $false
 
 # 存在時、既存ファイル読み込み
 if (Test-Path($srcIni))
@@ -61,8 +62,9 @@ if (Test-Path($srcIni))
             $line = "$key=$value"
             # キーの変更が完了したらセクションを抜ける
             $inSection = $false
+            $keySet = $true
         }
-        # キーが見つからずセクションを抜けた場合
+        # キーが見つからず別セクションを見つけた場合
         elseif ($inSection -and $line -match "^\[") {
             $inSection = $false
             $sectionEnd = $lineCnt
@@ -91,6 +93,12 @@ if (Test-Path($srcIni))
     {
         # ファイル末尾にセクション、キー値を追加
         $outputContent += "[$section]"
+        $outputContent += "$key=$value"
+    }
+    # セクションを見つけたがキーが見つからずiniファイルを抜けた場合
+    elseif (-not $keySet)
+    {
+        # ファイル末尾にキー値を追加
         $outputContent += "$key=$value"
     }
 }
