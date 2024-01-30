@@ -1,0 +1,4 @@
+# フォルダ配下すべて無視
+dist/
+node_modules/
+
