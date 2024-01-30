@@ -107,5 +107,5 @@
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
   // srcディレクトリ以下すべての.tsファイルがコンパイル対象
-  "include": ["./src/**/*.ts"]
+  "include": ["./src/**/*.ts", "src/practice/index.ts"]
 }

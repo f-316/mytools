@@ -1,2 +1,4 @@
-const msg:string = 'hello';
-console.log(msg)
+import { Practice } from './practice/index.js'
+
+const prac = new Practice()
+prac.start();
