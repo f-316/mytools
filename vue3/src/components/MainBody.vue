@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import {ref, computed} from 'vue'
-import {TheSample} from './Sample'
+import { ref, computed } from 'vue'
+import { TheSample } from './Sample'
+import { ChatTest } from './Chart'
 defineProps<{
   msg: string
 }>()
@@ -13,7 +14,8 @@ setInterval(() => {
 <template>
   <div class="greetings">
     <h1 class="green">{{ cnt }}</h1>
-    <TheSample/>
+    <TheSample />
+    <ChatTest />
   </div>
 </template>
 
