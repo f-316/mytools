@@ -1,0 +1,42 @@
+{
+  "folders": [
+    {
+      "path": ".."
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/.git": true,
+      "**/.svn": true,
+      "**/.hg": true,
+      "**/CVS": true,
+      "**/.DS_Store": true,
+      "**/Thumbs.db": true,
+      "node_modules": true,
+      "package-lock.json": true
+      // ".gitignore": true
+    },
+    // エディタにルーラを表示
+    "editor.rulers": [80],
+    // ファイル全体にフォーマッタを適用
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    // vscodeでFlatConfigの設定eslint.config.jsを適用させるために必要
+    "eslint.experimental.useFlatConfig": true,
+    // 個別ファイル設定
+    "[markdown]": {
+      "editor.formatOnSave": false
+    },
+    // "[javascript]": {
+    //   "editor.formatOnSave": true,
+    //   "editor.defaultFormatter": "esbenp.prettier-vscode"
+    // },
+    // .prettierrcに相当する部分
+    "prettier.printWidth": 80,
+    "prettier.singleQuote": true,
+    "prettier.tabWidth": 2
+  },
+  "extensions": {
+    "recommendations": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+  }
+}
