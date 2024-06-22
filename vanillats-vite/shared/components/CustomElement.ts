@@ -7,6 +7,8 @@ export abstract class CustomElement extends HTMLElement {
   _shadow: ShadowRoot;
   _contents: HTMLDivElement;
   _style: HTMLStyleElement;
+  _customElementClass: CustomElementConstructor;
+  _customElementName: string;
   constructor(customElementClass: CustomElementConstructor) {
     // カスタム要素を定義
     const customElemName = toKebab(customElementClass.name);
@@ -16,22 +18,20 @@ export abstract class CustomElement extends HTMLElement {
 
     // コンストラクターでは常に super を最初に呼び出してください
     super();
+
+    this._customElementClass = customElementClass;
+    this._customElementName = customElemName;
     this._shadow = this.attachShadow({ mode: 'open' });
 
     // ここに要素の機能を記述します
-    this._style = document.createElement('style');
     this._contents = document.createElement('div');
-    this._setStyle();
-    this._setInnerHTML();
+    this._style = document.createElement('style');
+
+    // 継承先でセットしてください。
+    // this._setInnerHTML();
+    // this._setStyle();
 
     this._shadow.append(this._style, this._contents);
-  }
-
-  /**
-   * スタイルをセットします。
-   */
-  _setStyle() {
-    this._style.textContent = ``;
   }
 
   /**
@@ -41,8 +41,17 @@ export abstract class CustomElement extends HTMLElement {
     this._contents.innerHTML = ``;
   }
 
+  /**
+   * スタイルをセットします。
+   */
+  _setStyle() {
+    this._style.textContent = ``;
+  }
+
   connectedCallback() {
     // console.log(`${this.constructor.name} added to page.`);
+    const customElems = document.querySelectorAll(this._customElementName);
+    console.log(customElems);
   }
 
   disconnectedCallback() {

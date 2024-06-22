@@ -5,7 +5,27 @@ export class CustomButton extends CustomElement {
     // コンストラクターでは常に super を最初に呼び出してください
     super(CustomButton);
 
-    // ここに要素の機能を記述します
+    // メンバのセットアップ
+
+    // メンバのセットアップが終わってから呼び出して下さい
+    this._setInnerHTML();
+    this._setStyle();
+  }
+
+  /**
+   * 内容をセットします。
+   */
+  _setInnerHTML() {
+    this._contents.innerHTML = `
+      <div class="contents">
+        <div class="icon">
+          <slot name="icon"></slot>
+        </div>
+        <div class="caption">
+          <slot name="caption"></slot>
+        </div>
+      </div>
+    `;
   }
 
   /**
@@ -15,21 +35,16 @@ export class CustomButton extends CustomElement {
     const backgroundColor = this.getAttribute('background-color');
     this._style.textContent = `
       .contents {
+        user-select: none;
         display: flex;
         align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        min-width: 5rem;
+        min-height: 2rem;
+        border: 1px white solid;
         background-color: ${backgroundColor};
       }
-    `;
-  }
-
-  _setInnerHTML() {
-    this._contents.innerHTML = `
-      <div class="contents">
-        <slot name="a"></slot>
-      </div>
-      <div class="contents">
-        <slot name="b"></slot>
-      </div>
     `;
   }
 
