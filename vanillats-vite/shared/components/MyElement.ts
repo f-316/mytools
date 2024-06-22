@@ -1,8 +1,9 @@
-export class MyButton extends HTMLElement {
+class MyElement extends HTMLElement {
   #shadow: ShadowRoot;
   #button: HTMLButtonElement;
   #style: HTMLStyleElement;
   constructor() {
+    customElements.define('my-button', MyElement);
     // コンストラクターでは常に super を最初に呼び出してください
     super();
     this.#shadow = this.attachShadow({ mode: 'open' });
@@ -24,7 +25,9 @@ export class MyButton extends HTMLElement {
       }
     `;
   }
-
+  set text(txt: string) {
+    this.#button.innerHTML = txt ?? `<slot></slot>`;
+  }
   updateContents() {
     const text = this.getAttribute('text');
     this.#button.innerHTML = text ?? `<slot></slot>`;
@@ -48,11 +51,7 @@ export class MyButton extends HTMLElement {
    * @param oldVal
    * @param newVal
    */
-  attributeChangedCallback(
-    name: string,
-    oldVal: string | null,
-    newVal: string | null
-  ) {
+  attributeChangedCallback(name: string, oldVal: string | null, newVal: string | null) {
     console.log('Custom square element attributes changed.');
 
     switch (name) {
@@ -66,3 +65,9 @@ export class MyButton extends HTMLElement {
     }
   }
 }
+
+// カスタム要素を定義
+// ただしこれだとグローバルに定義されるため同名のmy-buttonが使えなくなる
+// Uncaught DOMException: Failed to execute 'define' on 'CustomElementRegistry': the name "my-button" has already been used with this registry
+// at http://localhost:5173/src/components/MyButton.ts:59:16
+export { MyElement };

@@ -17,7 +17,7 @@
       // ".gitignore": true
     },
     // エディタにルーラを表示
-    "editor.rulers": [80],
+    "editor.rulers": [100],
     // ファイル全体にフォーマッタを適用
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -32,7 +32,7 @@
     //   "editor.defaultFormatter": "esbenp.prettier-vscode"
     // },
     // .prettierrcに相当する部分
-    "prettier.printWidth": 80,
+    "prettier.printWidth": 100,
     "prettier.singleQuote": true,
     "prettier.tabWidth": 2
   },

@@ -10,10 +10,7 @@ import pluginEcPrettier from 'eslint-config-prettier';
 // eslintのプラグイン
 import pluginJs from '@eslint/js';
 // eslintのtypescript版のプラグイン
-import {
-  configs as tsLintConfigs,
-  parser as tsLintParser,
-} from 'typescript-eslint';
+import { configs as tsLintConfigs, parser as tsLintParser } from 'typescript-eslint';
 
 export default [
   pluginJs.configs.recommended,
@@ -30,7 +27,7 @@ export default [
     },
     rules: {
       ...pluginEcPrettier.rules,
-      'id-length': ['error', { min: 4 }],
+      'id-length': ['error', { min: 2 }],
       'init-declarations': 'error',
       'no-unused-vars': 'warn',
       // ...pluginTcPrettier.rules,
