@@ -1,39 +1,54 @@
 import { CustomElement } from '@/components/CustomElement';
-import { CustomButton } from '@/components/CustomButton';
+import { CustomButton, type CustomButtonEvent } from '@/components/CustomButton';
 
 export class TheContents extends CustomElement {
-  #button: CustomButton;
+  #buttons: CustomButton[] = [];
 
   constructor() {
     // コンストラクターでは常に super を最初に呼び出してください
     super(TheContents);
 
     // メンバの初期化
-    this.#button = new CustomButton();
+    [...Array(5)].forEach((_, index) => {
+      this.#buttons.push(new CustomButton());
+      this.#buttons[index].setAttribute(`data-id`, `${index}`);
+    });
 
-    // メンバのセットアップ
+    // セットアップ
     this.#setup();
 
-    // メンバのセットアップが終わってから呼び出して下さい
+    // セットアップが終わってから呼び出して下さい
     this._setInnerHTML();
     this._setStyle();
   }
 
   /**
-   * メンバのセットアップ
+   * セットアップ
    */
   #setup() {
-    this.#button.innerHTML = `
-      <span slot="icon">A</span>
-      <span slot="caption">B</span>
-    `;
-    this.#button.addEventListener('click', this.#onClickButton.bind(this));
+    this.#buttons.forEach((el) => {
+      el.innerHTML = `
+        <span slot="icon">A</span>
+        <span slot="caption">B</span>
+      `;
+      el.addEventListener(
+        '#click',
+        this.#onClickButton.bind(this) as EventListenerOrEventListenerObject
+      );
+    });
   }
 
-  #onClickButton(event: MouseEvent) {
-    // const contents = this._shadow.querySelectorAll('.contents');
-    // const customElems = this._shadow.querySelectorAll('custom-button');
-    this.#button.backgroundColor = 'red';
+  #onClickButton(event: CustomButtonEvent) {
+    const btn = this.#buttons.find((el) => {
+      return el === event.target;
+    });
+
+    if (btn) {
+      btn!.backgroundColor = 'red';
+    }
+    console.log(event!.detail);
+    console.log(event!.detail?.name);
+    console.log(event!.detail?.uid);
   }
 
   /**
@@ -44,7 +59,8 @@ export class TheContents extends CustomElement {
       <div class="contents">
       </div>
     `;
-    this._contents.querySelector('.contents')!.append(this.#button);
+
+    this._contents.querySelector('.contents')!.append(...this.#buttons);
   }
 
   /**

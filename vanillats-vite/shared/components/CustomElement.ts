@@ -50,8 +50,6 @@ export abstract class CustomElement extends HTMLElement {
 
   connectedCallback() {
     // console.log(`${this.constructor.name} added to page.`);
-    const customElems = document.querySelectorAll(this._customElementName);
-    console.log(customElems);
   }
 
   disconnectedCallback() {

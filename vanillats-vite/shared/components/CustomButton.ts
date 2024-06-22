@@ -1,15 +1,49 @@
 import { CustomElement } from './CustomElement';
 
+type CustomEventDetail = { name: string; uid: number };
+export type CustomButtonEvent = CustomEvent<CustomEventDetail>;
+
+let customButtonUID = 0;
 export class CustomButton extends CustomElement {
-  constructor() {
+  #uid: number;
+  #clickEvent: CustomButtonEvent;
+  constructor(name: string = '') {
     // コンストラクターでは常に super を最初に呼び出してください
     super(CustomButton);
 
-    // メンバのセットアップ
+    // メンバの初期化
+    this.#uid = customButtonUID++;
+    console.log(this.#uid);
+    this.#clickEvent = new CustomEvent('#click', { detail: { name, uid: this.#uid } });
 
-    // メンバのセットアップが終わってから呼び出して下さい
+    // セットアップ
+    this.#setup();
+
+    // セットアップが終わってから呼び出して下さい
     this._setInnerHTML();
     this._setStyle();
+  }
+
+  connectedCallback() {
+    console.log('connectedCallback');
+  }
+  disconnectedCallback() {
+    console.log('disconnectedCallback');
+  }
+  get uid() {
+    return this.#uid;
+  }
+
+  /**
+   * セットアップ
+   */
+  #setup() {
+    // console.log('#setup');
+    this._shadow.addEventListener('click', this.#onClick.bind(this));
+  }
+
+  #onClick() {
+    this.dispatchEvent(this.#clickEvent);
   }
 
   /**

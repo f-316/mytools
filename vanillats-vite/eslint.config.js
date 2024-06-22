@@ -27,7 +27,7 @@ export default [
     },
     rules: {
       ...pluginEcPrettier.rules,
-      'id-length': ['error', { min: 2 }],
+      'id-length': ['error', { min: 1 }],
       'init-declarations': 'error',
       'no-unused-vars': 'warn',
       // ...pluginTcPrettier.rules,
