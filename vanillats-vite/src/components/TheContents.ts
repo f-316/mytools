@@ -4,7 +4,7 @@ import { CustomWindow } from '@/components/CustomWindow';
 
 export class TheContents extends CustomElement {
   #buttons: CustomButton[] = [];
-  #window: CustomWindow;
+  #window: CustomWindow = new CustomWindow();
 
   constructor() {
     // コンストラクターでは常に super を最初に呼び出してください
@@ -15,7 +15,6 @@ export class TheContents extends CustomElement {
       this.#buttons.push(new CustomButton());
       this.#buttons[index].setAttribute('data-id', `${index}`);
     });
-    this.#window = new CustomWindow();
 
     // セットアップ
     this.#setup();
@@ -43,6 +42,7 @@ export class TheContents extends CustomElement {
   }
 
   #onClickButton(event: CustomButtonEvent) {
+    console.log(event!.detail);
     const btn = this.#buttons.find((el) => {
       return el === event.target;
     });

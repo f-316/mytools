@@ -50,7 +50,7 @@ export class CustomButton extends CustomElement {
    * 内容をセットします。
    */
   _setInnerHTML() {
-    this._contents.innerHTML = /* HTML */`
+    this._contents.innerHTML = /* HTML */ `
       <div class="contents">
         <div class="icon">
           <slot name="icon"></slot>
