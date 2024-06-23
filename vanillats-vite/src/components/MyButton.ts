@@ -25,11 +25,11 @@ class MyButton extends HTMLElement {
     `;
   }
   set text(txt: string) {
-    this.#button.innerHTML = txt ?? `<slot></slot>`;
+    this.#button.innerHTML = txt ?? '<slot></slot>';
   }
   updateContents() {
     const text = this.getAttribute('text');
-    this.#button.innerHTML = text ?? `<slot></slot>`;
+    this.#button.innerHTML = text ?? '<slot></slot>';
   }
   static observedAttributes = ['color', 'text'];
   connectedCallback() {
@@ -50,7 +50,8 @@ class MyButton extends HTMLElement {
    * @param oldVal
    * @param newVal
    */
-  attributeChangedCallback(name: string, oldVal: string | null, newVal: string | null) {
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+  attributeChangedCallback(name: string, _oldVal: string | null, _newVal: string | null) {
     console.log('Custom square element attributes changed.');
 
     switch (name) {

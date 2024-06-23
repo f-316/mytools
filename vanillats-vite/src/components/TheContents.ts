@@ -11,7 +11,7 @@ export class TheContents extends CustomElement {
     // メンバの初期化
     [...Array(5)].forEach((_, index) => {
       this.#buttons.push(new CustomButton());
-      this.#buttons[index].setAttribute(`data-id`, `${index}`);
+      this.#buttons[index].setAttribute('data-id', `${index}`);
     });
 
     // セットアップ
@@ -31,10 +31,7 @@ export class TheContents extends CustomElement {
         <span slot="icon">A</span>
         <span slot="caption">B</span>
       `;
-      el.addEventListener(
-        '#click',
-        this.#onClickButton.bind(this) as EventListenerOrEventListenerObject
-      );
+      el.addEventListener('#click', this.#onClickButton.bind(this) as EventListener);
     });
   }
 
@@ -44,8 +41,13 @@ export class TheContents extends CustomElement {
     });
 
     if (btn) {
-      btn!.backgroundColor = 'red';
+      if (btn!.backgroundColor !== 'red') {
+        btn!.backgroundColor = 'red';
+      } else {
+        btn!.backgroundColor = 'unset';
+      }
     }
+
     console.log(event!.detail);
     console.log(event!.detail?.name);
     console.log(event!.detail?.uid);
@@ -55,9 +57,9 @@ export class TheContents extends CustomElement {
    * 内容をセットします。
    */
   _setInnerHTML() {
-    this._contents.innerHTML = `
-      <div class="contents">
-      </div>
+    this._contents.innerHTML = /* HTML */ `
+      <div class="contents"></div>
+      <div class></div>
     `;
 
     this._contents.querySelector('.contents')!.append(...this.#buttons);
@@ -68,12 +70,13 @@ export class TheContents extends CustomElement {
    */
   _setStyle() {
     const backgroundColor = this.getAttribute('background-color');
-    this._style.textContent = `
+    this._style.textContent = /* CSS */ `
       .contents {
         display: flex;
         align-items: center;
         background-color: ${backgroundColor};
       }
+      .hoge {}
     `;
   }
 }

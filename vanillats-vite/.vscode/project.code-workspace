@@ -34,9 +34,20 @@
     // .prettierrcに相当する部分
     "prettier.printWidth": 100,
     "prettier.singleQuote": true,
-    "prettier.tabWidth": 2
+    "prettier.tabWidth": 2,
+    "emmet.includeLanguages": {
+      "typescript": "html"
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "vscode.typescript-language-features"
+    }
   },
   "extensions": {
-    "recommendations": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+    "recommendations": [
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode",
+      "bierner.comment-tagged-templates",
+      "stylelint.vscode-stylelint"
+    ]
   }
 }

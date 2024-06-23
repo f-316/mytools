@@ -148,3 +148,9 @@ https://github.com/prettier/prettier/blob/554b15473dd4032a036d7db91a8f579e624c98
 eslint --fix 　 or Prettier
 https://zenn.dev/kohski/articles/eslint-prettier-integration
 eslint-config-prettier を使うのがよい？
+
+# その他
+* "bierner.comment-tagged-templates"  
+  * vscode拡張、テンプレートリテラルのhtmlやcssのハイライト
+* vscodeの補完
+  * Emmet: Include Languages

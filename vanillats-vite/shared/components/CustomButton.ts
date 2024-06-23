@@ -50,7 +50,7 @@ export class CustomButton extends CustomElement {
    * 内容をセットします。
    */
   _setInnerHTML() {
-    this._contents.innerHTML = `
+    this._contents.innerHTML = /* HTML */`
       <div class="contents">
         <div class="icon">
           <slot name="icon"></slot>
@@ -67,7 +67,7 @@ export class CustomButton extends CustomElement {
    */
   _setStyle() {
     const backgroundColor = this.getAttribute('background-color');
-    this._style.textContent = `
+    this._style.textContent = /* CSS */ `
       .contents {
         user-select: none;
         display: flex;
@@ -79,6 +79,9 @@ export class CustomButton extends CustomElement {
         border: 1px white solid;
         background-color: ${backgroundColor};
       }
+      :active {
+        opacity: 0.4;
+      }
     `;
   }
 
@@ -88,5 +91,8 @@ export class CustomButton extends CustomElement {
   static observedAttributes = ['background-color'];
   set backgroundColor(val: string) {
     this.setAttribute('background-color', val);
+  }
+  get backgroundColor() {
+    return this.getAttribute('background-color') ?? '';
   }
 }

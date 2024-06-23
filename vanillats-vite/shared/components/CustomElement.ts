@@ -38,14 +38,14 @@ export abstract class CustomElement extends HTMLElement {
    * 内容をセットします。
    */
   _setInnerHTML() {
-    this._contents.innerHTML = ``;
+    this._contents.innerHTML = '';
   }
 
   /**
    * スタイルをセットします。
    */
   _setStyle() {
-    this._style.textContent = ``;
+    this._style.textContent = '';
   }
 
   connectedCallback() {

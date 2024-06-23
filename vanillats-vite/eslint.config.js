@@ -30,6 +30,18 @@ export default [
       'id-length': ['error', { min: 1 }],
       'init-declarations': 'error',
       'no-unused-vars': 'warn',
+      // コンソールは許可
+      'no-console': 'off',
+      // varは禁止
+      'no-var': 'error',
+      // 文字列はシングルクオートのみ,テンプレートリテラルは許可
+      quotes: ['error', 'single', { allowTemplateLiterals: true }],
+      // 不要なカッコは消す
+      'no-extra-parens': 'error',
+      // 無駄なスペースは削除
+      'no-multi-spaces': 'error',
+      // 不要な空白行は削除。2行開けてたらエラー
+      'no-multiple-empty-lines': ['error', { max: 1 }],
       // ...pluginTcPrettier.rules,
       // ...pluginScPrettier.rules,
     },
