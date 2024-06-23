@@ -29,7 +29,7 @@ export class TheHeader extends HTMLElement {
 
   updateStyle() {
     const backgroundColor = this.getAttribute('background-color');
-    this.#style.textContent = `
+    this.#style.textContent = /* CSS */ `
       .header {
         display: flex;
         align-items: center;
@@ -39,7 +39,7 @@ export class TheHeader extends HTMLElement {
   }
 
   updateContents() {
-    this.#contents.innerHTML = `
+    this.#contents.innerHTML = /* HTML */ `
       <div class="header">
         <a href="https://vitejs.dev" target="_blank">
           <img src="${viteLogo}" class="logo" alt="Vite logo" />

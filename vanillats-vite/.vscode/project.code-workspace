@@ -37,9 +37,6 @@
     "prettier.tabWidth": 2,
     "emmet.includeLanguages": {
       "typescript": "html"
-    },
-    "[typescript]": {
-      "editor.defaultFormatter": "vscode.typescript-language-features"
     }
   },
   "extensions": {

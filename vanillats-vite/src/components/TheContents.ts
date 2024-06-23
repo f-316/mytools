@@ -1,8 +1,10 @@
 import { CustomElement } from '@/components/CustomElement';
 import { CustomButton, type CustomButtonEvent } from '@/components/CustomButton';
+import { CustomWindow } from '@/components/CustomWindow';
 
 export class TheContents extends CustomElement {
   #buttons: CustomButton[] = [];
+  #window: CustomWindow;
 
   constructor() {
     // コンストラクターでは常に super を最初に呼び出してください
@@ -13,6 +15,7 @@ export class TheContents extends CustomElement {
       this.#buttons.push(new CustomButton());
       this.#buttons[index].setAttribute('data-id', `${index}`);
     });
+    this.#window = new CustomWindow();
 
     // セットアップ
     this.#setup();
@@ -27,12 +30,16 @@ export class TheContents extends CustomElement {
    */
   #setup() {
     this.#buttons.forEach((el) => {
-      el.innerHTML = `
+      el.innerHTML = /* HTML */ `
         <span slot="icon">A</span>
         <span slot="caption">B</span>
       `;
       el.addEventListener('#click', this.#onClickButton.bind(this) as EventListener);
     });
+    this.#window.innerHTML = /* HTML */ `
+      <span slot="title">This is title</span>
+      <span slot="body">This is body</span>
+    `;
   }
 
   #onClickButton(event: CustomButtonEvent) {
@@ -63,6 +70,7 @@ export class TheContents extends CustomElement {
     `;
 
     this._contents.querySelector('.contents')!.append(...this.#buttons);
+    this._contents.querySelector('.contents')!.append(this.#window);
   }
 
   /**
