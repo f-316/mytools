@@ -1,62 +1,70 @@
-import { toKebab } from '@/lib/string-tool';
-
 /**
  * カスタム要素を利用するための抽象クラスです
  */
 export abstract class CustomElement extends HTMLElement {
-  _shadow: ShadowRoot;
-  _contents: HTMLDivElement;
-  _style: HTMLStyleElement;
-  _customElementClass: CustomElementConstructor;
-  _customElementName: string;
-  constructor(customElementClass: CustomElementConstructor) {
-    // カスタム要素を定義
-    const customElemName = toKebab(customElementClass.name);
-    if (!customElements.get(customElemName)) {
-      customElements.define(customElemName, customElementClass);
+  /**
+   * カスタム要素を定義
+   * @param customElementName
+   * @param customElementConstructor
+   */
+  static use(customElementName: string, customElementConstructor: CustomElementConstructor) {
+    if (!customElements.get(customElementName)) {
+      customElements.define(customElementName, customElementConstructor);
     }
+  }
 
+  private m_shadow: ShadowRoot;
+  m_tempElem: HTMLTemplateElement;
+  m_styleElem: HTMLStyleElement;
+  constructor() {
     // コンストラクターでは常に super を最初に呼び出してください
     super();
 
-    this._customElementClass = customElementClass;
-    this._customElementName = customElemName;
-    this._shadow = this.attachShadow({ mode: 'open' });
+    this.m_shadow = this.attachShadow({ mode: 'open' });
 
     // ここに要素の機能を記述します
-    this._contents = document.createElement('div');
-    this._style = document.createElement('style');
+    this.m_tempElem = document.createElement('template');
+    this.m_styleElem = document.createElement('style');
 
-    // 継承先でセットしてください。
-    // this._setInnerHTML();
-    // this._setStyle();
+    this.m_shadow.append(this.m_styleElem, this.m_tempElem);
+  }
 
-    this._shadow.append(this._style, this._contents);
+  protected get shadow() {
+    return this.m_shadow;
+  }
+
+  protected updateShadowRoot() {
+    this.updateStyle();
+
+    this.m_tempElem.innerHTML = this.templateHTML();
+    const tempClone = this.m_tempElem.content.cloneNode(true);
+    this.m_shadow.append(tempClone);
+  }
+
+  protected updateStyle() {
+    this.m_styleElem.textContent = this.styleHTML();
   }
 
   /**
-   * 内容をセットします。
+   * 派生でテンプレートをセットしてください。
    */
-  _setInnerHTML() {
-    this._contents.innerHTML = '';
-  }
+  protected abstract templateHTML(): string;
 
   /**
-   * スタイルをセットします。
+   * 派生でスタイルをセットしてください。
    */
-  _setStyle() {
-    this._style.textContent = '';
-  }
+  protected abstract styleHTML(): string;
 
-  connectedCallback() {
+  protected connectedCallback() {
     // console.log(`${this.constructor.name} added to page.`);
+    this.updateShadowRoot();
   }
 
-  disconnectedCallback() {
+  protected disconnectedCallback() {
     // console.log(`${this.constructor.name} removed from page.`);
   }
 
-  adoptedCallback() {
+  protected adoptedCallback() {
     // console.log(`${this.constructor.name} moved to new page.`);
   }
 
@@ -67,9 +75,15 @@ export abstract class CustomElement extends HTMLElement {
    * @param oldVal
    * @param newVal
    */
-  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-  attributeChangedCallback(_name: string, _oldVal: string | null, _newVal: string | null) {
+  protected attributeChangedCallback(
+    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+    _name: string,
+    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+    _oldVal: string | null,
+    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+    _newVal: string | null
+  ) {
     // console.log('attributeChangedCallback', name);
-    this._setStyle();
+    this.updateStyle();
   }
 }

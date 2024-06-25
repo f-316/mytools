@@ -1,115 +1,102 @@
+import { toKebab } from '@/lib/string-tool';
 import { CustomElement } from './CustomElement';
 
 type CustomEventDetail = { name: string; uid: number };
 export type CustomWindowEvent = CustomEvent<CustomEventDetail>;
 
+type Point = { x: number; y: number };
+
 let customWindowUID = 0;
 export class CustomWindow extends CustomElement {
-  #uid: number;
-  #windowPos: { x: number; y: number };
-  #lastPagePos: { x: number; y: number };
-  #isDown = false;
-  #title: HTMLDivElement;
-  #body: HTMLDivElement;
+  /**
+   * カスタム要素を定義
+   */
+  static use() {
+    CustomElement.use(toKebab('CustomWindow'), CustomWindow);
+  }
+
+  protected m_windowPos: Point;
+  protected m_lastPagePos: Point | null = null;
+  protected m_name: string;
+  protected m_uid: number;
   constructor(name: string = '') {
     // コンストラクターでは常に super を最初に呼び出してください
-    super(CustomWindow);
+    super();
 
     // メンバの初期化
-    this.#uid = customWindowUID++;
-    console.log(name);
-    console.log(this.#uid);
-    this.#windowPos = { x: 0, y: 0 };
-    this.#lastPagePos = { x: 0, y: 0 };
-    this.#title = document.createElement('div');
-    this.#body = document.createElement('div');
-
-    // セットアップ
-    this.#setup();
-
-    // セットアップが終わってから呼び出して下さい
-    this._setInnerHTML();
-    this._setStyle();
+    this.m_name = name;
+    this.m_uid = customWindowUID++;
+    this.m_windowPos = { x: 0, y: 0 };
   }
 
   connectedCallback() {
     console.log('connectedCallback');
+    const titleElem = this.shadow.querySelector('.frame .title');
+    if (titleElem) {
+      titleElem.addEventListener('pointerdown', this.onPointerDown.bind(this) as EventListener);
+      titleElem.addEventListener('pointerup', this.onPointerUP.bind(this));
+      titleElem.addEventListener('pointerleave', this.onPointerUP.bind(this));
+      window.addEventListener('pointermove', this.onPointerMove.bind(this));
+    }
   }
   disconnectedCallback() {
     console.log('disconnectedCallback');
+    const titleElem = this.shadow.querySelector('.frame .title');
+    if (titleElem) {
+      titleElem.removeEventListener('pointerdown', this.onPointerDown.bind(this) as EventListener);
+      titleElem.removeEventListener('pointerup', this.onPointerUP.bind(this));
+      titleElem.removeEventListener('pointerleave', this.onPointerUP.bind(this));
+      window.removeEventListener('pointermove', this.onPointerMove.bind(this));
+    }
   }
-  get uid() {
-    return this.#uid;
-  }
-
-  /**
-   * セットアップ
-   */
-  #setup() {
-    // console.log('#setup');
+  getUid() {
+    return this.m_uid;
   }
 
   /**
    * 内容をセットします。
    */
-  _setInnerHTML() {
-    this.#title.innerHTML = /* HTML */ `
-      <div class="title">
-        <slot name="title"></slot>
-      </div>
-    `;
-    this.#body.innerHTML = /* HTML */ `
-      <div class="body">
-        <slot name="body"></slot>
-      </div>
-    `;
-    this._contents.innerHTML = /* HTML */ `
+  protected override templateHTML(): string {
+    return /* HTML */ `
       <div class="backdrop">
-        <div class="frame"></div>
+        <div class="frame">
+          <div class="title">
+            <slot name="title"></slot>
+          </div>
+          <div class="body">
+            <slot name="body"></slot>
+          </div>
+        </div>
       </div>
     `;
-    const frame = this._shadow.querySelector('.frame');
-    frame!.append(this.#title, this.#body);
-
-    this.#title!.addEventListener('pointerdown', this.#onPointerDown.bind(this));
-    this.#title!.addEventListener('pointerup', this.#onPointerUP.bind(this));
-    this.#title!.addEventListener('pointerleave', this.#onPointerLeave.bind(this));
-    window.addEventListener('pointermove', this.#onPointerMove.bind(this));
   }
 
-  #onPointerDown(event: PointerEvent) {
-    this.#lastPagePos.x = event.x;
-    this.#lastPagePos.y = event.y;
-    this.#isDown = true;
+  onPointerDown(event: PointerEvent) {
+    this.m_lastPagePos = { x: event.x, y: event.y };
   }
 
-  #onPointerLeave() {
-    if (!this.#isDown) return;
-    this.#isDown = true;
+  onPointerUP() {
+    this.m_lastPagePos = null;
   }
 
-  #onPointerUP() {
-    this.#isDown = false;
-    // console.log(event);
-  }
-
-  #onPointerMove(event: PointerEvent) {
-    if (!this.#isDown) return;
-    const diffX = event.x - this.#lastPagePos.x;
-    const diffY = event.y - this.#lastPagePos.y;
-    this.#lastPagePos.x = event.x;
-    this.#lastPagePos.y = event.y;
-    this.#windowPos.x += diffX;
-    this.#windowPos.y += diffY;
-    this._setStyle();
+  onPointerMove(event: PointerEvent) {
+    if (!this.m_lastPagePos) return;
+    const diffX = event.x - this.m_lastPagePos.x;
+    const diffY = event.y - this.m_lastPagePos.y;
+    this.m_lastPagePos.x = event.x;
+    this.m_lastPagePos.y = event.y;
+    this.m_windowPos.x += diffX;
+    this.m_windowPos.y += diffY;
+    this.updateStyle();
   }
 
   /**
    * スタイルをセットします。
    */
-  _setStyle() {
+  static observedAttributes = ['background-color'];
+  protected styleHTML() {
     const backgroundColor = this.getAttribute('background-color');
-    this._style.textContent = /* CSS */ `
+    return /* CSS */ `
       .backdrop {
         pointer-events: none;
         width: 100%;
@@ -122,8 +109,8 @@ export class CustomWindow extends CustomElement {
       .frame {
         pointer-events: auto;
         position: absolute;
-        left: ${this.#windowPos.x}px;
-        top: ${this.#windowPos.y}px;
+        left: ${this.m_windowPos.x}px;
+        top: ${this.m_windowPos.y}px;
         user-select: none;
         display: flex;
         align-items: center;
@@ -145,16 +132,5 @@ export class CustomWindow extends CustomElement {
         background-color: green;
       }
     `;
-  }
-
-  /**
-   * 属性変更時
-   */
-  static observedAttributes = ['background-color'];
-  set backgroundColor(val: string) {
-    this.setAttribute('background-color', val);
-  }
-  get backgroundColor() {
-    return this.getAttribute('background-color') ?? '';
   }
 }

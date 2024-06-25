@@ -1,3 +1,4 @@
+import { toKebab } from '@/lib/string-tool';
 import { CustomElement } from './CustomElement';
 
 type CustomEventDetail = { name: string; uid: number };
@@ -5,23 +6,24 @@ export type CustomButtonEvent = CustomEvent<CustomEventDetail>;
 
 let customButtonUID = 0;
 export class CustomButton extends CustomElement {
-  #uid: number;
-  #clickEvent: CustomButtonEvent;
+  /**
+   * カスタム要素を定義
+   */
+  static use() {
+    CustomElement.use(toKebab('CustomButton'), CustomButton);
+  }
+
+  protected m_name: string;
+  protected m_uid: number;
   constructor(name: string = '') {
     // コンストラクターでは常に super を最初に呼び出してください
-    super(CustomButton);
+    super();
 
     // メンバの初期化
-    this.#uid = customButtonUID++;
-    console.log(this.#uid);
-    this.#clickEvent = new CustomEvent('#click', { detail: { name, uid: this.#uid } });
+    this.m_name = name;
+    this.m_uid = customButtonUID++;
 
-    // セットアップ
-    this.#setup();
-
-    // セットアップが終わってから呼び出して下さい
-    this._setInnerHTML();
-    this._setStyle();
+    this.shadow.addEventListener('click', this.#onClick.bind(this));
   }
 
   connectedCallback() {
@@ -30,27 +32,26 @@ export class CustomButton extends CustomElement {
   disconnectedCallback() {
     console.log('disconnectedCallback');
   }
-  get uid() {
-    return this.#uid;
+  adoptedCallback() {
+    console.log('adoptedCallback');
   }
 
-  /**
-   * セットアップ
-   */
-  #setup() {
-    // console.log('#setup');
-    this._shadow.addEventListener('click', this.#onClick.bind(this));
+  getUid() {
+    return this.m_uid;
   }
 
   #onClick() {
-    this.dispatchEvent(this.#clickEvent);
+    const clickEvent = new CustomEvent('custom-click', {
+      detail: { name: this.m_name, uid: this.m_uid },
+    });
+    this.dispatchEvent(clickEvent);
   }
 
   /**
    * 内容をセットします。
    */
-  _setInnerHTML() {
-    this._contents.innerHTML = /* HTML */ `
+  protected override templateHTML() {
+    return /* HTML */ `
       <div class="contents">
         <div class="icon">
           <slot name="icon"></slot>
@@ -65,9 +66,9 @@ export class CustomButton extends CustomElement {
   /**
    * スタイルをセットします。
    */
-  _setStyle() {
+  protected override styleHTML() {
     const backgroundColor = this.getAttribute('background-color');
-    this._style.textContent = /* CSS */ `
+    return /* CSS */ `
       .contents {
         user-select: none;
         display: flex;
@@ -79,20 +80,10 @@ export class CustomButton extends CustomElement {
         border: 1px white solid;
         background-color: ${backgroundColor};
       }
+
       :active {
         opacity: 0.4;
       }
     `;
-  }
-
-  /**
-   * 属性変更時
-   */
-  static observedAttributes = ['background-color'];
-  set backgroundColor(val: string) {
-    this.setAttribute('background-color', val);
-  }
-  get backgroundColor() {
-    return this.getAttribute('background-color') ?? '';
   }
 }
