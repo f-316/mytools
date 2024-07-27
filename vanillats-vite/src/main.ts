@@ -13,8 +13,10 @@ console.log(CustomElement.list);
 class EventTest {
   m_name = '';
   m_div: HTMLElement | null = null;
+  m_abortController: AbortController;
   constructor(name: string) {
     this.m_name = name;
+    this.m_abortController = new AbortController();
     this.setup();
   }
 
@@ -33,6 +35,10 @@ class EventTest {
     app.appendChild(this.m_div);
     if (!this.m_div) return;
     this.m_div.addEventListener('click', this.onClick);
+    document.body.addEventListener('click', this.onClick);
+    document.body.addEventListener('click', this.onClick2, {
+      signal: this.m_abortController.signal,
+    });
     console.log('this.m_div.addEventListener');
   }
 
@@ -41,6 +47,7 @@ class EventTest {
 
     this.m_div!.remove();
     document.body.removeEventListener('click', this.onClick);
+    this.m_abortController.abort();
   }
 
   greet() {
@@ -48,6 +55,14 @@ class EventTest {
   }
 
   protected onClick = (event: MouseEvent) => {
+    console.log('onClick');
+    console.log(this.m_name);
+    console.log(event);
+    console.log(event.target);
+  };
+
+  protected onClick2 = (event: MouseEvent) => {
+    console.log('onClick2');
     console.log(this.m_name);
     console.log(event);
     console.log(event.target);
