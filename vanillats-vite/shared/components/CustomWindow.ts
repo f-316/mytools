@@ -30,7 +30,7 @@ export class CustomWindow extends CustomElement {
   }
 
   connectedCallback() {
-    console.log('connectedCallback');
+    // console.log('connectedCallback');
     const titleElem = this.shadow.querySelector('.frame .title');
     if (titleElem) {
       titleElem.addEventListener('pointerdown', this.onPointerDown.bind(this) as EventListener);
@@ -40,7 +40,7 @@ export class CustomWindow extends CustomElement {
     }
   }
   disconnectedCallback() {
-    console.log('disconnectedCallback');
+    // console.log('disconnectedCallback');
     const titleElem = this.shadow.querySelector('.frame .title');
     if (titleElem) {
       titleElem.removeEventListener('pointerdown', this.onPointerDown.bind(this) as EventListener);

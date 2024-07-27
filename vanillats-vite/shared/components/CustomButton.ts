@@ -15,32 +15,52 @@ export class CustomButton extends CustomElement {
 
   protected m_name: string;
   protected m_uid: number;
+  protected m_slots: HTMLSlotElement[] | undefined;
+  protected m_id: string | undefined;
   constructor(name: string = '') {
     // コンストラクターでは常に super を最初に呼び出してください
     super();
 
     // メンバの初期化
-    this.m_name = name;
+    this.m_name = this.getAttribute('name') ?? name;
     this.m_uid = customButtonUID++;
 
-    this.shadow.addEventListener('click', this.#onClick.bind(this));
+    this.shadow.addEventListener('click', this.onClick.bind(this));
+  }
+  protected onEvent: EventListenerOrEventListenerObject | undefined;
+
+  protected override connectedCallback() {
+    this.updateShadowRoot();
+    // console.log('connectedCallback');
+    this.m_slots = [...this.shadow.querySelectorAll('slot')];
+    if (!this.m_slots) return;
+    this.m_slots.forEach((slot) => {
+      this.onEvent = (event: Event) => {
+        console.log(slot.name);
+        console.log(event);
+      };
+      slot.addEventListener('slotchange', this.onEvent);
+    });
   }
 
-  connectedCallback() {
-    console.log('connectedCallback');
+  protected override disconnectedCallback() {
+    // console.log('disconnectedCallback');
+    if (!this.m_slots) return;
+    this.m_slots.forEach((slot) => {
+      if (!this.onEvent) return;
+      console.log(`${slot.name}, disconnected`);
+      slot.removeEventListener('slotchange', this.onEvent);
+    });
   }
-  disconnectedCallback() {
-    console.log('disconnectedCallback');
-  }
-  adoptedCallback() {
-    console.log('adoptedCallback');
+  protected override adoptedCallback() {
+    // console.log('adoptedCallback');
   }
 
   getUid() {
     return this.m_uid;
   }
 
-  #onClick() {
+  protected onClick() {
     const clickEvent = new CustomEvent('custom-click', {
       detail: { name: this.m_name, uid: this.m_uid },
     });
@@ -53,6 +73,7 @@ export class CustomButton extends CustomElement {
   protected override templateHTML() {
     return /* HTML */ `
       <div class="contents">
+        <slot></slot>
         <div class="icon">
           <slot name="icon"></slot>
         </div>
@@ -79,6 +100,14 @@ export class CustomButton extends CustomElement {
         min-height: 2rem;
         border: 1px white solid;
         background-color: ${backgroundColor};
+      }
+
+      .icon {
+        color: red;
+      }
+      
+      .caption {
+        color: green;
       }
 
       :active {

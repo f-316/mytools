@@ -1,5 +1,7 @@
 import { toKebab } from '@/lib/string-tool';
 import { CustomElement } from '@/components/CustomElement';
+import { CustomButton } from '@/components/CustomButton';
+CustomButton.use();
 
 export class TheContents extends CustomElement {
   /**
@@ -14,6 +16,15 @@ export class TheContents extends CustomElement {
     super();
   }
 
+  protected connectedCallback() {
+    super.connectedCallback();
+
+    const button1 = this.shadow.querySelector('custom-button[name="1"]');
+    setTimeout(() => {
+      button1!.remove();
+    }, 3000);
+  }
+
   /**
    * 内容をセットします。
    */
@@ -21,6 +32,12 @@ export class TheContents extends CustomElement {
     return /* HTML */ `
       <div class="contents">
         <div class="foo">Hello!</div>
+        <custom-button class="foo" name="1">
+          Hello!
+          <div slot="caption">aaa</div>
+          <div slot="icon">iii</div>
+        </custom-button>
+        <custom-button class="foo" name="2">Hello!</custom-button>
       </div>
     `;
   }
@@ -31,8 +48,7 @@ export class TheContents extends CustomElement {
   protected override styleHTML() {
     return /* CSS */ `
       .contents {
-        display: flex;
-        align-items: center;
+        padding: 12px;
       }
     `;
   }

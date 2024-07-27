@@ -2,6 +2,10 @@
  * カスタム要素を利用するための抽象クラスです
  */
 export abstract class CustomElement extends HTMLElement {
+  private static m_list: string[] = [];
+  static get list() {
+    return CustomElement.m_list;
+  }
   /**
    * カスタム要素を定義
    * @param customElementName
@@ -9,6 +13,7 @@ export abstract class CustomElement extends HTMLElement {
    */
   static use(customElementName: string, customElementConstructor: CustomElementConstructor) {
     if (!customElements.get(customElementName)) {
+      CustomElement.m_list.push(customElementName);
       customElements.define(customElementName, customElementConstructor);
     }
   }
@@ -35,7 +40,6 @@ export abstract class CustomElement extends HTMLElement {
 
   protected updateShadowRoot() {
     this.updateStyle();
-
     this.m_tempElem.innerHTML = this.templateHTML();
     const tempClone = this.m_tempElem.content.cloneNode(true);
     this.m_shadow.append(tempClone);
