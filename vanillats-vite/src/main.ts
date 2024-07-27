@@ -20,6 +20,14 @@ class EventTest {
     this.setup();
   }
 
+  protected get abortSignal() {
+    return this.m_abortController.signal;
+  }
+
+  protected get willRemove() {
+    return { signal: this.abortSignal };
+  }
+
   protected setup() {
     // document.body.addEventListener('click', this.onClick);
     const app = document.body.querySelector('#app');
@@ -36,9 +44,17 @@ class EventTest {
     if (!this.m_div) return;
     this.m_div.addEventListener('click', this.onClick);
     document.body.addEventListener('click', this.onClick);
-    document.body.addEventListener('click', this.onClick2, {
-      signal: this.m_abortController.signal,
-    });
+    document.body.addEventListener('click', this.onClick2, this.willRemove);
+    document.body.addEventListener(
+      'click',
+      (event: Event) => {
+        console.log('arrow function');
+        console.log(this.m_name);
+        console.log(event);
+        console.log(event.target);
+      },
+      this.willRemove
+    );
     console.log('this.m_div.addEventListener');
   }
 
