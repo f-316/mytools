@@ -1,0 +1,17 @@
+{
+  "name": "ts_lib_test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "clean": "powershell \"Get-ChildItem dist -Include * -Recurse | Remove-Item -Recurse\"",
+    "compile": "tsc && powershell \"Get-ChildItem dist -Include *.ts -Recurse | Remove-Item\"",
+    "build": "npm run clean && npm run compile && node resolveImportPath.js"
+  },
+  "type": "module",
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}
