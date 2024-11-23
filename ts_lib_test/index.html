@@ -6,8 +6,13 @@
     <title>Document</title>
 </head>
 <body>
-    <script type="module">
+    <!-- <script type="module">
         import { Lib1 } from './dist/lib/Lib1/Lib1.js';
+        const lib1 = new Lib1();
+        lib1.test();
+    </script> -->
+    <script type="module">
+        import { Lib1 } from './dist/lib/Lib1/index.js';
         const lib1 = new Lib1();
         lib1.test();
     </script>

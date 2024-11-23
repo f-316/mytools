@@ -6,8 +6,7 @@
   "scripts": {
     "clean": "powershell \"Get-ChildItem dist -Include * -Recurse | Remove-Item -Recurse\"",
     "compile": "tsc && powershell \"Get-ChildItem dist -Include *.ts -Recurse | Remove-Item\"",
-    "build": "npm run clean && npm run compile && node resolveImportPath.js",
-    "vite-build": "tsc && vite build"
+    "build": "npm run clean && npm run compile && node resolveImportPath.js"
   },
   "type": "module",
   "author": "",
