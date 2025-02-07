@@ -1,10 +1,10 @@
 #pragma once
 
-class CsvTest
+class ImageFileTest
 {
 public:
-	CsvTest();
-	~CsvTest();
+	ImageFileTest();
+	~ImageFileTest();
 	void Test();
 
 private:

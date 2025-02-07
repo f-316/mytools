@@ -3,7 +3,7 @@
 
 //#include "MathEx.h"
 //#include "NetTools.h"
-//#include "CsvTest.h"
+//#include "ImageFileTest.h"
 //#include "BasicTools.h"
 //#include "Grammar.h"
 //#include "CppStandard.h"
@@ -15,15 +15,24 @@
 //#include <locale.h>
 #include <locale.h>
 #include "WinEventTool.h"
+#include "ImageFileTest.h"
 
-int main()
+int _main()
 {
     WinEventTool tool;
     //tool.Run();
     tool.WaitEventMode();
+    return 1;
 }
 
-int _main()
+int main()
+{
+    ImageFileTest test;
+    test.Test();
+    return 1;
+}
+
+int __main()
 {
     char pMulti[] = "私の名前は武です。";
     printf("%s\n", pMulti);

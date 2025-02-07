@@ -1,4 +1,4 @@
-﻿#include "CsvTest.h"
+﻿#include "ImageFileTest.h"
 #include "windows.h"
 #include <stdio.h>
 #include <iostream>
@@ -8,11 +8,11 @@
 
 #include <tchar.h>
 
-CsvTest::CsvTest()
+ImageFileTest::ImageFileTest()
 {
 }
 
-CsvTest::~CsvTest()
+ImageFileTest::~ImageFileTest()
 {
 }
 
@@ -77,7 +77,7 @@ void FindDirectory
     ::FindClose(hFile);
 }
 
-void CsvTest::Test()
+void ImageFileTest::Test()
 {
 	using namespace std;
 
