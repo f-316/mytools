@@ -10,6 +10,7 @@ main(process.argv.slice(2), process.argv.slice(2).length)
 /** import */
 import fs from 'fs';
 import { exec } from 'child_process';
+import { IniTool } from '../modules/ini-tool.mjs';
 
 /**
  * main
@@ -17,8 +18,8 @@ import { exec } from 'child_process';
  * @param { number } argc 
  */
 async function main(argv, argc) {
-    let lSrcPath = './#src/a.json';
-    let rSrcPath = './#src/b.json';
+    let lSrcPath = './#src/a.ini';
+    let rSrcPath = './#src/b.ini';
     let diffTool = 'C:/Program Files/WinMerge/WinMergeU.exe';
     let tempDir = './#tmp/';
 
@@ -40,12 +41,10 @@ async function main(argv, argc) {
 
     try {
         // read json files
-        const lContents = fs.readFileSync(lSrcPath);
-        const rContents = fs.readFileSync(rSrcPath);
-
-        // sort
-        const lSortedObj = sortJsonObj(JSON.parse(lContents));
-        const rSortedObj = sortJsonObj(JSON.parse(rContents));
+        const lIni = new IniTool(lSrcPath);
+        const rIni = new IniTool(rSrcPath);
+        lIni.load();
+        rIni.load();
 
         // get file names
         const lFname = path.basename(lSrcPath);
@@ -60,9 +59,9 @@ async function main(argv, argc) {
         }
 
         // export to temp dir
-        fs.writeFileSync(`${dstLFPath}`, JSON.stringify(lSortedObj, null, 2), {encoding: 'utf8'})
-        fs.writeFileSync(`${dstRFPath}`, JSON.stringify(rSortedObj, null, 2), {encoding: 'utf8'})
-        
+        lIni.writeIni(`${dstLFPath}`)
+        rIni.writeIni(`${dstRFPath}`)
+
         // diff
         exec(`"${diffTool}" "${dstLFPath}" "${dstRFPath}"`)
 
@@ -75,16 +74,4 @@ async function main(argv, argc) {
     }
 
     return true;
-}
-
-function sortJsonObj(jsonObj) {
-    let obj = {};
-    if (typeof jsonObj !== 'object' ) {
-        return jsonObj;
-    }
-
-    Object.keys(jsonObj).sort().forEach(key => {
-        obj[key] = sortJsonObj(jsonObj[key]);
-    })
-    return obj;
 }
