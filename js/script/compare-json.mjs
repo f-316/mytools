@@ -5,23 +5,24 @@ const THIS_PATH = process.argv[1];
 const THIS_FNAME = path.basename(THIS_PATH);
 const THIS_DIR = path.dirname(THIS_PATH);
 const WORKING_DIR = path.resolve('.');
-main(process.argv.slice(2), process.argv.slice(2).length)
 
 /** import */
 import fs from 'fs';
 import { exec } from 'child_process';
+import { sortJsonObj } from '../modules/object-tools.mjs';
+
+/** arg defaults */
+let lSrcPath = './#src/a.json';
+let rSrcPath = './#src/b.json';
+let diffTool = 'C:/Program Files/WinMerge/WinMergeU.exe';
+let tempDir = './#tmp/';
 
 /**
  * main
  * @param { string[] } argv 
  * @param { number } argc 
  */
-async function main(argv, argc) {
-    let lSrcPath = './#src/a.json';
-    let rSrcPath = './#src/b.json';
-    let diffTool = 'C:/Program Files/WinMerge/WinMergeU.exe';
-    let tempDir = './#tmp/';
-
+const main = (argv, argc) => {
     // arg check
     if (2 <= argc) {
         lSrcPath = argv[0];
@@ -77,14 +78,5 @@ async function main(argv, argc) {
     return true;
 }
 
-function sortJsonObj(jsonObj) {
-    let obj = {};
-    if (typeof jsonObj !== 'object' ) {
-        return jsonObj;
-    }
-
-    Object.keys(jsonObj).sort().forEach(key => {
-        obj[key] = sortJsonObj(jsonObj[key]);
-    })
-    return obj;
-}
+// main
+main(process.argv.slice(2), process.argv.slice(2).length)

@@ -5,24 +5,24 @@ const THIS_PATH = process.argv[1];
 const THIS_FNAME = path.basename(THIS_PATH);
 const THIS_DIR = path.dirname(THIS_PATH);
 const WORKING_DIR = path.resolve('.');
-main(process.argv.slice(2), process.argv.slice(2).length)
 
 /** import */
 import fs from 'fs';
 import { exec } from 'child_process';
-import { IniTool } from '../modules/ini-tool.mjs';
+import { IniTool } from '../modules/IniTool.mjs';
+
+/** arg defaults */
+let lSrcPath = './#src/a.ini';
+let rSrcPath = './#src/b.ini';
+let diffTool = 'C:/Program Files/WinMerge/WinMergeU.exe';
+let tempDir = './#tmp/';
 
 /**
  * main
  * @param { string[] } argv 
  * @param { number } argc 
  */
-async function main(argv, argc) {
-    let lSrcPath = './#src/a.ini';
-    let rSrcPath = './#src/b.ini';
-    let diffTool = 'C:/Program Files/WinMerge/WinMergeU.exe';
-    let tempDir = './#tmp/';
-
+const main = (argv, argc) => {
     // arg check
     if (2 <= argc) {
         lSrcPath = argv[0];
@@ -75,3 +75,6 @@ async function main(argv, argc) {
 
     return true;
 }
+
+// main
+main(process.argv.slice(2), process.argv.slice(2).length)
