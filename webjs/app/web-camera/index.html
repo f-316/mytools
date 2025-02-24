@@ -3,52 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Camera Selector</title>
+  <title>Change Background</title>
 </head>
 <body>
-  <h1>Select Camera</h1>
-  <select id="cameraSelect"></select>
-  <button id="startButton">Start</button>
-  <video id="video" autoplay></video>
-
+  <canvas id="canvas"></canvas>
+  <input type="file" id="upload" accept="image/*">
   <script>
-    async function getCameras() {
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        return devices.filter(device => device.kind === 'videoinput');
-    }
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const upload = document.getElementById('upload');
 
-    async function startVideo(cameraId) {
-        console.log(cameraId);
-        const constraints = {
-            video: {
-                deviceId: cameraId ? { exact: cameraId } : undefined
-            }
-        };
-        const stream = await navigator.mediaDevices.getUserMedia(constraints);
-        console.log(stream);
-        const videoElement = document.getElementById('video');
-        videoElement.srcObject = stream;
-    }
+    upload.addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
 
-    function populateCameraOptions(cameras) {
-        const select = document.getElementById('cameraSelect');
-        cameras.forEach(camera => {
-            const option = document.createElement('option');
-            option.value = camera.deviceId;
-            option.text = camera.label;
-            select.appendChild(option);
-        });
-    }
+      reader.onload = function(e) {
+          const img = new Image();
+          img.onload = function() {
+          canvas.width = img.width;
+          canvas.height = img.height;
 
-    document.getElementById('startButton').addEventListener('click', async () => {
-        const selectedCameraId = document.getElementById('cameraSelect').value;
-        await startVideo(selectedCameraId);
-    });
+          // 適切なアルゴリズムを使って背景を除去し、新しい背景を表示
+          ctx.drawImage(img, 0, 0);
 
-    document.addEventListener('DOMContentLoaded', async () => {
-        const cameras = await getCameras();
-        console.log(cameras);
-        populateCameraOptions(cameras);
+          // ここに背景画像を変更するロジックを追加
+          };
+          img.src = e.target.result;
+      };
+
+      reader.readAsDataURL(file);
     });
   </script>
 </body>
