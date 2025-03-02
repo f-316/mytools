@@ -8,10 +8,10 @@ const WORKING_DIR = path.resolve('.');
 
 /** import */
 import fs from 'fs';
-// import { getDevices, getDeviceStatus, postDeviceCommand } from './lib/swtich-bot.mjs';
-import { getDeviceInfo, getAppliances } from './lib/nature-remo.mjs';
 import { NatureRemo } from './lib/NatureRemo.mjs';
 import { SwitchBot } from './lib/SwitchBot.mjs';
+import { GoogleCloudAPI } from './lib/GoogleCloudAPI.mjs';
+import { Stopwatch } from './lib/Stopwatch.mjs';
 
 /** arg defaults */
 
@@ -25,37 +25,73 @@ async function sleep(ms) {
  * @param { number } argc 
  */
 const main = async (argv, argc) => {
+  const logFile = './#dist/test.log';
 
   // トークン取得
   const nrJsonStr = fs.readFileSync('#token/nature-remo.json')
   const sbJsonStr = fs.readFileSync('#token/switch-bot.json')
   const nrJson = JSON.parse(nrJsonStr);
   const sbJson = JSON.parse(sbJsonStr);
+  const CREDENTIALS_PATH = '#token/gc_credentials.json';
+  const TOKEN_PATH = '#token/gc_token.json';
 
   const natureRemo = new NatureRemo(nrJson.token);
   const switchBot = new SwitchBot(sbJson.token, sbJson.secret);
-
-  let start = performance.now()
-  let elapsedMs = 0
-  const intervalMs = 5 * 60 * 1000;
-  const logFile = './#dist/test.log';
-
+  const gcApi = new GoogleCloudAPI(CREDENTIALS_PATH, TOKEN_PATH);
+  
+  const loopAdjTimer = new Stopwatch(true);
+  let loopAdjLapMs = 0
+  const loopIntervalMs = 2000;
+  const loggingMin = 5;
+  let initExe = true;
+  let exeLog = false;
+  let exeUpload = true;
+  let curHour = new Date().getHours();
+  let lastHour = curHour;
+  let curMin = -1;
+  let lastMin = -1;
   while (1) {
-    // 処理
-    const dateStr = new Date().toLocaleString();
-    const nrTemps = await natureRemo.getTemps();
-    const sbTemps = await switchBot.getTemps();
-    const line = `${dateStr},${sbTemps.te},${sbTemps.hu},${nrTemps.te},${nrTemps.hu}\n`
+    const date = new Date();
+    curMin = date.getMinutes();
+    curHour = date.getHours();
 
-    fs.writeFile(logFile, line, {flag:'a'}, err => !err ?? console.error(err))
-    
-    // 待ち
-    elapsedMs = performance.now() - start;
-    // console.log(elapsedMs);
-    if (elapsedMs < intervalMs) {
-        await sleep(intervalMs - elapsedMs);
+    // ログ
+    if (initExe || (!exeLog && curMin % loggingMin === 0)) {
+      initExe = false;
+      exeLog = true;
+      lastMin = curMin;
+
+      // 処理
+      const dateStr = date.toLocaleString();
+      const nrTemps = await natureRemo.getTemps();
+      const sbTemps = await switchBot.getTemps();
+      const line = `${dateStr},${sbTemps.te},${sbTemps.hu},${nrTemps.te},${nrTemps.hu}\n`
+  
+      // ToDo: Streamの方がいい
+      fs.writeFileSync(logFile, line, {flag:'a'})
+      // fs.writeFile(logFile, line, {flag:'a'}, (err) => {
+      //   !err ?? console.error(err);
+      //   // gcApi.saveFile(logFile, '1QE3YdDcQviPFzap0KU2dern-Bj-Ly0xs', 'sample.txt');
+      // })
+    } else if (lastMin !== curMin) {
+      exeLog = false;
     }
-    start = performance.now()
+
+    // アップロード
+    if (!exeUpload) {
+      gcApi.saveFile(logFile, '1QE3YdDcQviPFzap0KU2dern-Bj-Ly0xs', 'sample.txt');
+      console.log(`${date.toLocaleString()} Uploaded!`);
+      lastHour = curHour;
+    } else if (lastHour !== curHour) {
+      exeUpload = false;
+    }
+      
+    // 待ち時間調整
+    loopAdjLapMs = loopAdjTimer.lapMs();
+    if (loopAdjLapMs < loopIntervalMs) {
+      await sleep(loopIntervalMs - loopAdjLapMs);
+    }
+    loopAdjTimer.lap();
   }
 
   return true;
