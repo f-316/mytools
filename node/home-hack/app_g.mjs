@@ -1,5 +1,5 @@
 /** pre */
-import path, { resolve } from 'path'
+import path from 'path'
 const NODE_EXE = process.argv[0];
 const THIS_PATH = process.argv[1];
 const THIS_FNAME = path.basename(THIS_PATH);

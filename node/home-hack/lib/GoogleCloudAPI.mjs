@@ -2,12 +2,13 @@
 import fs from 'fs';
 import { google } from 'googleapis';
 import { authenticate } from '@google-cloud/local-auth';
+import { AppLog } from './AppLog.mjs';
 
 export class GoogleCloudAPI {
   SCOPES = ['https://www.googleapis.com/auth/drive.file'];
   m_credentialsPath = '#token/gc_credentials.json';
   m_tokenPath = '#token/gc_token.json';
-  m_logPath = 'GoogleCloudAPI.log';
+  m_log = new AppLog('', 'GCA');
   constructor(credentialsPath, tokenPath) {
     // 認証情報の設定
     if (credentialsPath) {
@@ -17,7 +18,7 @@ export class GoogleCloudAPI {
       this.m_tokenPath = tokenPath;
     }
   }
-  
+
   /**
    * 認証を行う関数
    * @returns { Promise<OAuth2Client> } auth
@@ -32,14 +33,13 @@ export class GoogleCloudAPI {
 
       // アクセストークンが期限切れの場合、リフレッシュトークンを使用して新しいトークンを取得
       if (auth.credentials.expiry_date && auth.credentials.expiry_date <= Date.now()) {
-        console.log(`refreshAccessToken, ${auth.credentials.expiry_date},${Date.now()}`);
-        await refreshAccessToken(auth);
+        console.log(`refreshAccessToken,expiry_date=${auth.credentials.expiry_date},now=${Date.now()}`);
+        const ret = await this.refreshAccessToken(auth);
       }
 
       return auth;
     } catch (err) {
-      console.log(err);
-      fs.writeFile(this.m_logPath, `${new Date().toLocaleString()} [ERROR]${err}\n`, {flag:'a'}, err => !err ?? console.error(err));
+      this.m_log.error(43, err)
       
       const auth = await authenticate({
         keyfilePath: this.m_credentialsPath,
@@ -60,6 +60,8 @@ export class GoogleCloudAPI {
       auth.refreshAccessToken((err, token) => {
         if (err) {
           reject('Error refreshing access token: ' + err);
+          this.m_log.error(64, err)
+          return;
         }
         auth.setCredentials(token);
         fs.writeFileSync(this.m_tokenPath, JSON.stringify(token));
@@ -88,13 +90,13 @@ export class GoogleCloudAPI {
   }
 
   /**
-   * ファイルをアップデートする関数
+   * ファイルをアップデート
    * @param { OAuth2Client } auth 
    * @param { String } localFilePath 
    * @param { String } fileId 
    * @returns { String } fileId
    */
-  async updateFile(auth, localFilePath, fileId) {
+  async _updateFile(auth, localFilePath, fileId) {
     const drive = google.drive({ version: 'v3', auth });
     const media = {
         mimeType: 'text/plain',
@@ -111,14 +113,14 @@ export class GoogleCloudAPI {
   }
   
   /**
-   * ファイルをアップロード
+   * ファイルをアップロード,すでに存在する場合は同名で新たに作られます。
    * @param { OAuth2Client } auth 
    * @param { String } localFilePath 
    * @param { String } folderId - ドライブでフォルダのリンクをコピーしたときの`https://drive.google.com/file/d/${folderId}/view?usp=drive_link`
    * @param { String } remoteFileName 
    * @returns { String } fileId
    */
-  async uploadFile(auth, localFilePath, folderId, remoteFileName) {
+  async _uploadFile(auth, localFilePath, folderId, remoteFileName) {
     const drive = google.drive({ version: 'v3', auth });
     const fileMetadata = {
       'name': remoteFileName,
@@ -139,7 +141,8 @@ export class GoogleCloudAPI {
   }
 
   /**
-   * 
+   * リモートファイル名が存在すればアップデート
+   * 存在しなければアップロード
    * @param { String } localFilePath 
    * @param { String } folderId 
    * @param { String } remoteFileName 
@@ -150,9 +153,32 @@ export class GoogleCloudAPI {
 
     const fileId = await this.searchFile(auth, remoteFileName, folderId);
     if (fileId) {
-      return await this.updateFile(auth, localFilePath, fileId);
+      return await this._updateFile(auth, localFilePath, fileId);
     } else {
-      return await this.uploadFile(auth, localFilePath, folderId, remoteFileName);
+      return await this._uploadFile(auth, localFilePath, folderId, remoteFileName);
     }
+  }
+
+  /**
+   * ファイルをアップデート
+   * @param { String } localFilePath 
+   * @param { String } fileId 
+   * @returns { String } fileId
+   */
+  async updateFile(localFilePath, fileId) {
+    const auth = await this.authorize();
+    return await this._updateFile(auth, localFilePath, fileId);
+  }
+
+  /**
+   * ファイルをアップロード,すでに存在する場合は同名で新たに作られます。
+   * @param { String } localFilePath 
+   * @param { String } folderId 
+   * @param { String } remoteFileName 
+   * @returns { String } fileId
+   */
+  async uploadFile(localFilePath, folderId, remoteFileName) {
+    const auth = await this.authorize();
+    return await this._uploadFile(auth, localFilePath, folderId, remoteFileName);
   }
 }

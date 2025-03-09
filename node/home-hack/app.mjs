@@ -1,5 +1,5 @@
 /** pre */
-import path, { resolve } from 'path'
+import path from 'path'
 const NODE_EXE = process.argv[0];
 const THIS_PATH = process.argv[1];
 const THIS_FNAME = path.basename(THIS_PATH);
@@ -12,6 +12,8 @@ import { NatureRemo } from './lib/NatureRemo.mjs';
 import { SwitchBot } from './lib/SwitchBot.mjs';
 import { GoogleCloudAPI } from './lib/GoogleCloudAPI.mjs';
 import { Stopwatch } from './lib/Stopwatch.mjs';
+import { AppLog } from './lib/AppLog.mjs';
+const appLog = new AppLog('', 'main');
 
 /** arg defaults */
 
@@ -50,6 +52,7 @@ const main = async (argv, argc) => {
   let lastHour = curHour;
   let curMin = -1;
   let lastMin = -1;
+  appLog.trace(55, `App start!loopIntervalMs=${loopIntervalMs},loggingMin=${loggingMin}`);
   while (1) {
     const date = new Date();
     curMin = date.getMinutes();
@@ -74,17 +77,21 @@ const main = async (argv, argc) => {
       //   // gcApi.saveFile(logFile, '1QE3YdDcQviPFzap0KU2dern-Bj-Ly0xs', 'sample.txt');
       // })
     } else if (lastMin !== curMin) {
+      lastMin = curMin;
       exeLog = false;
     }
 
     // アップロード
-    if (!exeUpload) {
-      gcApi.saveFile(logFile, '1QE3YdDcQviPFzap0KU2dern-Bj-Ly0xs', 'sample.txt');
-      console.log(`${date.toLocaleString()} Uploaded!`);
-      lastHour = curHour;
-    } else if (lastHour !== curHour) {
-      exeUpload = false;
-    }
+    // if (!exeUpload) {
+    //   exeUpload = true;
+    //   await gcApi.updateFile(logFile, '1yl7zEA1_pKi35aC6OrmKuPKylSn4HhuB');
+    //   appLog.trace(94, `Updated!`);
+    //   log(94, `Updated!`);
+    //   lastHour = curHour;
+    // } else if (lastHour !== curHour) {
+    //   lastHour = curHour;
+    //   exeUpload = false;
+    // }
       
     // 待ち時間調整
     loopAdjLapMs = loopAdjTimer.lapMs();
