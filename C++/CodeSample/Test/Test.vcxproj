@@ -200,18 +200,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CppStandard.cpp" />
-    <ClCompile Include="CsvTest.cpp" />
-    <ClCompile Include="Grammar.cpp" />
-    <ClCompile Include="ImageFileTest.cpp" />
     <ClCompile Include="OfficerAdapter.cpp" />
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="WinEventTool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CppStandard.h" />
-    <ClInclude Include="CsvTest.h" />
-    <ClInclude Include="Grammar.h" />
-    <ClInclude Include="ImageFileTest.h" />
     <ClInclude Include="OfficerAdapter.h" />
     <ClInclude Include="WinEventTool.h" />
   </ItemGroup>

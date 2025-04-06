@@ -1,8 +1,10 @@
 /** import */
 import https from 'https';
+import { AppLog } from './AppLog.mjs';
 
 export class NatureRemo {
   m_token = ''
+  m_log = new AppLog('', 'NR');
   constructor(token) {
     this.m_token = token;
   }
@@ -40,7 +42,7 @@ export class NatureRemo {
     });
 
     req.on('error', (e) => {
-      console.error(`Error: ${e.message}`);
+      this.m_log.error(43, `Error: ${e.message}`);
       controller.abort({result: false, data: e.message});
     });
     if (chunk !== undefined) {

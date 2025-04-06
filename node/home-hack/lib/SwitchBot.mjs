@@ -58,7 +58,7 @@ export class SwitchBot {
     });
 
     req.on('error', (e) => {
-      console.error(`Error: ${e.message}`);
+      this.m_log.error(61, `Error: ${e.message}`);
       controller.abort({result: false, data: e.message});
     });
     if (chunk !== undefined) {
@@ -98,12 +98,12 @@ export class SwitchBot {
     const resp = await this.getDeviceStatus('EF29FB69D240');
     if (resp.result) {
       const data = JSON.parse(resp.data);
-      const te = data?.body?.temperature ?? '?';
-      const hu = data?.body?.humidity ?? '?';
-      const il = data?.body?.lightLevel ?? '?';
-      if (te === '?') {
-        this.m_log.error(105, `data:${resp.data}`);
-      }
+      const te = data?.body?.temperature ?? '';
+      const hu = data?.body?.humidity ?? '';
+      const il = data?.body?.lightLevel ?? '';
+      // if (te === '') {
+      //   this.m_log.error(105, `data:${resp.data}`);
+      // }
       return { te, hu, il };
     }
 

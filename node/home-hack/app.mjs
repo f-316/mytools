@@ -50,6 +50,7 @@ const main = async (argv, argc) => {
   let exeUpload = true;
   let curHour = new Date().getHours();
   let lastHour = curHour;
+  let retryCnt = 0;
   let curMin = -1;
   let lastMin = -1;
   appLog.trace(55, `App start!loopIntervalMs=${loopIntervalMs},loggingMin=${loggingMin}`);
@@ -66,8 +67,22 @@ const main = async (argv, argc) => {
 
       // 処理
       const dateStr = date.toLocaleString();
-      const nrTemps = await natureRemo.getTemps();
-      const sbTemps = await switchBot.getTemps();
+      // nr取得 
+      let nrTemps = await natureRemo.getTemps();
+      while (nrTemps.te === '' && retryCnt <= 3) {
+        await sleep(2000)
+        nrTemps = await natureRemo.getTemps();
+        retryCnt++;
+      }
+      retryCnt = 0;
+      // sb取得 
+      let sbTemps = await switchBot.getTemps();
+      while (sbTemps.te === '' && retryCnt <= 3) {
+        await sleep(2000)
+        sbTemps = await switchBot.getTemps();
+        retryCnt++;
+      }
+      retryCnt = 0;
       const line = `${dateStr},${sbTemps.te},${sbTemps.hu},${nrTemps.te},${nrTemps.hu}\n`
   
       // ToDo: Streamの方がいい
