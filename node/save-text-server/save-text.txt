@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Drag and Drop</title>
+    <style>
+        #dropArea {
+            width: 300px;
+            height: 200px;
+            border: 2px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin: 20px auto;
+            font-size: 18px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="dropArea">ここにSVGファイルをドラッグ＆ドロップ</div>
+    <div id="svgContainer"></div>
+
+    <script>
+        const dropArea = document.getElementById('dropArea');
+        const svgContainer = document.getElementById('svgContainer');
+
+        dropArea.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            dropArea.style.borderColor = 'blue';
+        });
+
+        dropArea.addEventListener('dragleave', () => {
+            dropArea.style.borderColor = '#ccc';
+        });
+
+        dropArea.addEventListener('drop', (event) => {
+            event.preventDefault();
+            dropArea.style.borderColor = '#ccc';
+
+            const file = event.dataTransfer.files[0];
+            if (file && file.type === "image/svg+xml") {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    svgContainer.innerHTML = e.target.result;
+                };
+                reader.readAsText(file);
+            } else {
+                alert("SVGファイルをドロップしてください！");
+            }
+        });
+    </script>
+
+</body>
+</html>
