@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ConsoleApp": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Users\\Fumihiro\\Desktop\\test\\ C:\\Users\\Fumihiro\\Desktop\\log\\log.log C:\\Users\\Fumihiro\\Desktop\\ini\\ini.ini"
+    }
+  }
+}
