@@ -1,95 +1,79 @@
 ﻿//using System;
 using System;
+using System.Runtime.CompilerServices;
+using System;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
 
-public class Cls1
+class Program
 {
-    protected string name = "Bob";
-
-    virtual public void Greet()
+    static void Main2(string[] args)
     {
-        Console.WriteLine("Hello, {0}", name);
-    }
+        Console.WriteLine("commandline: " + args[0]);
+        string path = args[0]; // 指定のパス
+        Console.WriteLine("Path.EndsInDirectorySeparator(path): " + Path.EndsInDirectorySeparator(path));
 
-    override public string ToString()
-    {
-        return name;
-    }
-}
-
-public class Cls2 : Cls1
-{
-    public Cls2() {
-        this.name = "Alice";
-    }
-
-    override public void Greet()
-    {
-        Console.WriteLine("Cls2,Hello, {0}", name);
-    }
-}
-
-class Hoge
-{
-    static string name = "あああ";
-    static void Main()
-    {
-        var a = new List<int> { 1, 2, 3 };
-
-        try
+        if (Directory.Exists(path))
         {
-            Cls1 cls1 = new Cls1();
-            Cls2 cls2 = new Cls2();
-            cls1.Greet();
-            cls2.Greet();
-            Console.WriteLine("Hoge.name={0}", cls1);
-            Console.WriteLine("Hoge.name={0}", cls2);
-            for (int i = 0; i < a.Count(); i++)
+            if (!Path.EndsInDirectorySeparator(path))
             {
-                Console.WriteLine("a[{0}]={1}", i, a[i]);
+                path += Path.DirectorySeparatorChar;
             }
-            //for (int i = 0; i < 10; i++)
+
+            DateTime today = DateTime.Now;
+
+            for (int i = 0; i <= 13; i++) // 0 から 13 なので、合計 14 日間
+            {
+                DateTime date = today.AddDays(i);
+                Console.WriteLine(date.ToString("yyyy/MM/dd"));
+            }
+
+            static void SampleMethod(
+            string str = "",
+            [CallerFilePath] string file = "",
+            [CallerMemberName] string member = "",
+            [CallerLineNumber] int line = 0)
+            {
+                
+                Console.WriteLine($"{Path.GetFileName(file)},{member}[{line}]{str}");
+            }
+
+            try
+            {
+                DateTime now = DateTime.Now;
+
+                Console.WriteLine("path: " + path);
+                string dir = path + "dir1";
+                if (Directory.Exists(dir))
+                { 
+                    Directory.Delete(dir, true);
+                }
+                Directory.CreateDirectory(dir);
+                Console.WriteLine("path: " + path);
+            }
+            catch (Exception ex)
+            {
+                SampleMethod("Error: " + ex.Message);
+                //Console.WriteLine("Error: " + ex.Message);
+            }   
+
+
+            //string[] files = ;
+
+            //Console.WriteLine("found " + files.Length + " files.");
+            //foreach (string dir in Directory.EnumerateDirectories(path))
             //{
-            //    if (i == 5)
-            //    {
-            //        throw new Exception("あああ");
-            //    }
-            //    Console.WriteLine("Hello World! [{0}]={1}", i, a[i]);
+            //    Console.WriteLine(Path.GetFileName(dir));
             //}
         }
-        //catch (IndexOutOfRangeException e)
-        //{
-        //    Console.WriteLine("IndexOutOfRangeException: {0}", e.Message);
-        //}
-        catch (Exception e)
+        else
         {
-            Console.WriteLine("Exception: {0}", e.Message);
+            Console.WriteLine("指定のディレクトリが存在しません。");
         }
-        finally
-        {
-            Console.WriteLine("finally");
-        }
-
-        //string? s = Console.ReadLine();
-        //if (s == null || s == "")
-        //{
-        //    Console.WriteLine("NULL!");
-        //    return;
-        //}
-
-        //a = Int32.Parse(s);
-        //for (int i = 0; i < a.GetLength(0); i++)
-        //{
-        //    if (a[i] != null)
-        //    {
-        //        Console.WriteLine("a[{0}]={1}", i, a[i][0]);
-        //    }
-        //}
-    }
-    static int Avg(int a, int b)
-    {
-        return (a + b) / 2;
     }
 }
+
 //using System;
 //using System.Collections.Generic;
 //using System.IO;
