@@ -1,0 +1,24 @@
+<!-- img版 -->
+<!DOCTYPE html>
+<html>
+  <body>
+    <img id="viewer" style="width:800px;">
+    <script>
+      const viewer = document.getElementById("viewer");
+      const socket = new WebSocket("ws://localhost:8080");
+      socket.binaryType = "arraybuffer";  // バイナリ形式で受信
+
+      socket.onmessage = (event) => {
+        const blob = new Blob([event.data], { type: "image/jpeg" });
+        const url = URL.createObjectURL(blob);
+        viewer.src = url;
+
+        // メモリリーク防止のため、古いURLを解放
+        if (viewer.dataset.oldUrl) {
+          URL.revokeObjectURL(viewer.dataset.oldUrl);
+        }
+        viewer.dataset.oldUrl = url;
+      };
+    </script>
+  </body>
+</html>

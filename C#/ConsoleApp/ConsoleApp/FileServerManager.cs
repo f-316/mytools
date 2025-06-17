@@ -8,9 +8,33 @@ using System.Text;
 using static System.Collections.Specialized.BitVector32;
 using System.IO.Compression;
 
-class FileServerManager
+public class Test
 {
     static void Main(string[] args)
+    {
+        try
+        {
+            string path = @"\\localhost\C\Users\Fumihiro\Desktop\test\01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789\a";
+            //string path = @"C:\Users\Fumihiro\Desktop\test\01234567890123456789012345678901234567890123456789\b";
+            foreach(var file in Directory.GetFiles(path, "*.*", SearchOption.AllDirectories))
+            {
+                Console.WriteLine(file);
+                Console.WriteLine(file.Length);
+                File.Delete(file);
+            }
+            Console.WriteLine(path.Length);
+            //Directory.Delete(path, true);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+}
+
+class FileServerManager
+{
+    static void Main2(string[] args)
     {
         FileServerManager manager = new FileServerManager();
         manager.Execute(args);

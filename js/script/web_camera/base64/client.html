@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <img id="viewer" style="width:800px;">
+    <script>
+      const socket = new WebSocket("ws://localhost:8080");
+      socket.onmessage = (event) => {
+        document.getElementById("viewer").src = "data:image/jpeg;base64," + event.data;
+      };
+    </script>
+  </body>
+</html>
