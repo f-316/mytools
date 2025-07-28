@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		// 保存時にUTF-8へ強制変換しない
+		"files.autoGuessEncoding": false,
+		"files.encoding": "shiftjis",  // または "windows1252", "cp932"
+		"search.exclude": {
+			"**/build": true,
+			"**/dist": true,
+		},
+		"files.watcherExclude": {
+			"**/build": true,
+			"**/dist": true,
+		}
+	}
+}
