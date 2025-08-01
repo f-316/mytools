@@ -8,9 +8,11 @@ project(TcpClientTest)
 
 add_executable(TcpClientTest
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../lib/TcpComm/TcpAttrib.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../lib/TcpComm/TcpClient.cpp
 )
 
 target_include_directories(TcpClientTest PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../../lib/Base
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../lib/Pipe
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../lib/TcpComm
 )

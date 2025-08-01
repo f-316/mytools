@@ -14,7 +14,7 @@ public:
         char str[1024];
         va_list args;
         va_start(args, pStrFmt);
-        vsprintf_s(str, sizeof(str), pStrFmt, args);
+        ::vsprintf_s(str, sizeof(str), pStrFmt, args);
         va_end(args);
 
         WriteLine(pFileName, line, pFuncName, "Trace", "", str);
@@ -25,7 +25,7 @@ public:
         char str[1024];
         va_list args;
         va_start(args, pStrFmt);
-        vsprintf_s(str, sizeof(str), pStrFmt, args);
+        ::vsprintf_s(str, sizeof(str), pStrFmt, args);
         va_end(args);
 
         WriteLine(pFileName, line, pFuncName, "Error", "", str);
@@ -34,7 +34,7 @@ public:
 	static void Error(const char* pFileName, int line, const char* pFuncName, DWORD errorCode)
     {
         LPVOID lpMsgBuf;
-        DWORD bufLen = FormatMessageA(
+        DWORD bufLen = ::FormatMessageA(
             FORMAT_MESSAGE_ALLOCATE_BUFFER |
             FORMAT_MESSAGE_FROM_SYSTEM |
             FORMAT_MESSAGE_IGNORE_INSERTS,
@@ -45,19 +45,19 @@ public:
             0, NULL);
 
         char errorStr[20];
-        sprintf_s(errorStr, sizeof(errorStr), "Err:%lu,", errorCode);
+        ::sprintf_s(errorStr, sizeof(errorStr), "Err:%lu,", errorCode);
         Write(pFileName, line, pFuncName, "Error", errorStr, (const char*)lpMsgBuf);
 
-        LocalFree(lpMsgBuf);
+        ::LocalFree(lpMsgBuf);
     }
 
     static void WriteLine(const char* pFileName, int line, const char* pFuncName, const char* pType, const char* pPrefix, const char* pStr)
     {
-        printf("%s(%d)%s[%s]%s%s\n", pFileName, line, pFuncName, pType, pPrefix, pStr);
+        ::printf("%s(%d)%s[%s]%s%s\n", pFileName, line, pFuncName, pType, pPrefix, pStr);
     }
 
     static void Write(const char* pFileName, int line, const char* pFuncName, const char* pType, const char* pPrefix, const char* pStr)
     {
-        printf("%s(%d)%s[%s]%s%s", pFileName, line, pFuncName, pType, pPrefix, pStr);
+        ::printf("%s(%d)%s[%s]%s%s", pFileName, line, pFuncName, pType, pPrefix, pStr);
     }
 };

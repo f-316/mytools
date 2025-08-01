@@ -1,42 +1,45 @@
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#include <windows.h>
-#include <iostream>
+#include "TcpClient.h"
+#include "Log.h"
 #include <string>
+#include <iostream>
 
-#pragma comment(lib, "ws2_32.lib")
+class App
+{
+public:
+    void Start()
+    {
+        AppLog::Trace(FUNCTRACEARGS, "TcpClientTest,Start");
+        client.AddListener(this, &App::OnRecv);
+        client.Connect("127.0.0.1", 12345);
+        AppLog::Trace(FUNCTRACEARGS, "TcpClientTest,Started");
+
+        // コマンド
+        std::string line;
+        while (true) {
+            std::getline(std::cin, line);
+            if (line == "close") break;
+            client.Send((const BYTE*)line.c_str(), (DWORD)line.size());
+        }
+        client.Disconnect();
+    }
+
+private:
+    static void OnRecv(void* pInstance, const SOCKET clientSocket, const BYTE* pData, DWORD dataSize)
+    {
+        App* pThis = (App*)pInstance;
+        pThis->OnRecv(clientSocket, pData, dataSize);
+    }
+
+    void OnRecv(const SOCKET clientSocket, const BYTE* pData, DWORD dataSize)
+    {
+        AppLog::Trace(FUNCTRACEARGS, "dataSize=%lu", dataSize);
+    }
+    TcpClient client;
+};
 
 int main() {
-    WSADATA wsaData;
-    WSAStartup(MAKEWORD(2, 2), &wsaData);
 
-    SOCKET sock;
-    sockaddr_in serverAddr = {};
-    serverAddr.sin_family = AF_INET;
-    serverAddr.sin_port = htons(12345);
-    inet_pton(AF_INET, "127.0.0.1", &serverAddr.sin_addr);
-
-    // 接続リトライループ
-    while (true) {
-        sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-        if (connect(sock, (SOCKADDR*)&serverAddr, sizeof(serverAddr)) == 0) {
-            std::cout << "[接続] サーバーに接続成功" << std::endl;
-            break;
-        }
-        closesocket(sock);
-        std::cout << "[待機] 再接続を試みます..." << std::endl;
-        Sleep(1000);
-    }
-
-    std::string line;
-    while (true) {
-        std::getline(std::cin, line);
-        if (line == "close") break;
-        send(sock, line.c_str(), (int)line.size(), 0);
-    }
-
-    closesocket(sock);
-    std::cout << "[終了] 切断しました" << std::endl;
-    WSACleanup();
+    App app;
+    app.Start();
     return 0;
 }
